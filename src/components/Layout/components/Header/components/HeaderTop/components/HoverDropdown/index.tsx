@@ -66,7 +66,7 @@ const HoverDropdown: FC<IHoverDropdown> = ({ title, data }) => {
 
         <HoverDropdownMain>
           {data &&
-            data.map((value: IDropdown) => (
+            data?.map((value: IDropdown) => (
               <Item key={value._id} data={value} />
             ))}
         </HoverDropdownMain>

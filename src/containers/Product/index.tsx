@@ -105,7 +105,7 @@ const Product: FC<IProduct> = () => {
           <FilterContainer>
             <FilterBox>
               {facets &&
-                facets.map((value: IFacet) => (
+                facets?.map((value: IFacet) => (
                   <Filter key={value.name} data={value} />
                 ))}
             </FilterBox>

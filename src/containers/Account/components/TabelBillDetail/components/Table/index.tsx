@@ -37,7 +37,7 @@ const Table: FC<IItem> = ({ data }) => {
         <HedaerItem>Create At</HedaerItem>
         <HedaerItem>Action</HedaerItem>
       </Header>
-      {data.map((value) => {
+      {data?.map((value) => {
         let date = moment(Date.parse(value.createAt + "")).format(
           "MMMM Do YYYY, h:mm:ss a"
         );

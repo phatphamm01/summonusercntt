@@ -78,7 +78,7 @@ const NavDetailMobileExtra: FC<INavDetailMobileExtra> = ({
         Back to Main Menu
       </BackToMenu>
       {data &&
-        data.map((value) => (
+        data?.map((value) => (
           <NavDetailMobileExtraBox key={value._id}>
             <Link href={`${value._id}/${value.slug}`}>
               <NavDetailMobileExtraTitle>

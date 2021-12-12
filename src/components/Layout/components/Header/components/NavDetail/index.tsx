@@ -174,7 +174,7 @@ const NavDetail: FC<INavDetail> = ({ data }) => {
           }}
         >
           {data &&
-            data.map((catagoryLevel2) => (
+            data?.map((catagoryLevel2) => (
               <CategoryLeve2
                 key={catagoryLevel2._id}
                 style={{
@@ -190,18 +190,20 @@ const NavDetail: FC<INavDetail> = ({ data }) => {
                   {handleChunkArray(
                     catagoryLevel2?.children,
                     LENGTH_CATEGORY
-                  ).map(
+                  )?.map(
                     (listCatagoryLevel3: Array<ICategory>, index: number) => (
                       <div key={index}>
-                        {listCatagoryLevel3.map((catagoryLevel3: ICategory) => (
-                          <span key={catagoryLevel3._id}>
-                            <Link
-                              href={`/category/${catagoryLevel3._id}/${catagoryLevel3.slug}`}
-                            >
-                              <NavList>{catagoryLevel3.name}</NavList>
-                            </Link>
-                          </span>
-                        ))}
+                        {listCatagoryLevel3?.map(
+                          (catagoryLevel3: ICategory) => (
+                            <span key={catagoryLevel3._id}>
+                              <Link
+                                href={`/category/${catagoryLevel3._id}/${catagoryLevel3.slug}`}
+                              >
+                                <NavList>{catagoryLevel3.name}</NavList>
+                              </Link>
+                            </span>
+                          )
+                        )}
                       </div>
                     )
                   )}

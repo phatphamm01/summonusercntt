@@ -86,7 +86,7 @@ const ToolbarMobile: FC<IToolbarMobile> = ({ isActive, facets, onClick }) => {
             <FilterContainer isActive={isActive}>
               <FilterBox>
                 {facets &&
-                  facets.map((value: IFacet) => (
+                  facets?.map((value: IFacet) => (
                     <FilterWrraper key={value.name} data={value} />
                   ))}
               </FilterBox>

@@ -116,7 +116,7 @@ const Select: FC<ISelect> = ({ selected, data, onClick }) => {
         </Selected>
         <SelectList isActive={isActive}>
           {data &&
-            data.map((value: IItemSelect, index) => (
+            data?.map((value: IItemSelect, index) => (
               <SelectItem
                 key={index}
                 isActive={value.id === isSelected?.id}

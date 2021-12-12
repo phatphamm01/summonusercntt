@@ -156,7 +156,7 @@ const SelectVariant: FC<ISelectVariant> = ({
             <TitleBig onClick={setIsActive}>Select Size</TitleBig>
             <SelectVariantList>
               {variantList ? (
-                variantList.map((value) => (
+                variantList?.map((value) => (
                   <SelectVariantItem
                     onClick={() => handleSelected(value)}
                     key={value._id}

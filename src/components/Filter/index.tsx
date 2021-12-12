@@ -110,7 +110,9 @@ const Filter: FC<IFilter> = ({ data }) => {
 
     if (checked.length === 0) return;
 
-    let arrId = checked.map((value) => (value as HTMLElement).dataset.filterid);
+    let arrId = checked?.map(
+      (value) => (value as HTMLElement).dataset.filterid
+    );
 
     let url = new URL(location.origin + router.asPath);
     let p = url.searchParams.getAll("p");
@@ -145,7 +147,7 @@ const Filter: FC<IFilter> = ({ data }) => {
         gridColumn={listCloumn2.includes(data.name) ? 2 : 1}
         isActive={isActive}
       >
-        {data.values.map((value) => (
+        {data.values?.map((value) => (
           <FilterItem key={value.id}>
             <Check
               nameFilter={data.name?.split(" ")?.join("")}
