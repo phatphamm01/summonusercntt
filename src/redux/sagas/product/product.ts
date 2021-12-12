@@ -31,9 +31,13 @@ export function* getAllProductsSaga(action: any) {
     payload
   );
 
-  const { data } = response;
+  try {
+    const { data } = response;
 
-  yield put(getAllProductsSuccess(data));
+    yield put(getAllProductsSuccess(data));
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export function* getProductDetailSaga(action: any) {
@@ -43,9 +47,13 @@ export function* getProductDetailSaga(action: any) {
     payload
   );
 
-  const { data } = response;
+  try {
+    const { data } = response;
 
-  yield put(getProductDetailSuccess(data));
+    yield put(getProductDetailSuccess(data));
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export function* searchProductSaga(action: any) {
@@ -55,7 +63,11 @@ export function* searchProductSaga(action: any) {
     payload
   );
 
-  const { data } = response;
+  try {
+    const { data } = response;
 
-  yield put(searchProductSuccess(data));
+    yield put(searchProductSuccess(data));
+  } catch (error) {
+    console.log(error);
+  }
 }

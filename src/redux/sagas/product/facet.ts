@@ -8,7 +8,11 @@ export function* getFacetsSaga(action: any) {
 
   const response: IDataResponse = yield call(fetchProduct.getFacts, payload);
 
-  const { data } = response;
+  try {
+    const { data } = response;
 
-  yield put(getFacetsSuccess(data));
+    yield put(getFacetsSuccess(data));
+  } catch (error) {
+    console.log(error);
+  }
 }
