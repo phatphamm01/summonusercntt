@@ -7,7 +7,7 @@ import {
 } from "@paypal/react-paypal-js";
 import { addBill } from "@redux/slices/user";
 import { ICartList } from "@redux/types/user";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 
@@ -42,7 +42,8 @@ const Paypal: FC<IPaypal> = ({ price, data }) => {
   const dispatch = useAppDispatch();
   const [dataItem, setDataItem] =
     useState<{ data: PurchaseItem[]; quantity: number }>();
-  const [dataPaypal, setDataPaypal] = useState<any>();
+  // const [dataPaypal, setDataPaypal] = useState<any>();
+  const dataPaypal = useRef<any>();
 
   useEffect(() => {
     setDataItem(handleItemList());
@@ -77,7 +78,7 @@ const Paypal: FC<IPaypal> = ({ price, data }) => {
     );
 
     return {
-      shipping_address: dataPaypal?.shipping_address,
+      shipping_address: dataPaypal?.current?.shipping_address,
       data: dataItem?.data,
       quantityTotal: quantityTotal,
       total: price,
@@ -111,9 +112,7 @@ const Paypal: FC<IPaypal> = ({ price, data }) => {
       console.log(err);
     },
     onShippingChange(data, actions) {
-      console.log(data);
-
-      setDataPaypal(data);
+      dataPaypal.current = data;
 
       return actions.resolve();
     },
