@@ -35,14 +35,14 @@ const userSlice = createSlice({
 
     getWishlist() {},
     getWishlistSuccess(state, action) {
-      const handleData = action.products.map(
+      const handleData = action.products?.map(
         (value: { product: any }) => value.product
       );
       state.wishlist = handleData;
     },
     addWishlist(state, action: IAddWishlistPayload) {},
     addWishlistSuccess(state, action) {
-      const handleData = action.products.map(
+      const handleData = action.products?.map(
         (value: { product: any }) => value.product
       );
       state.wishlist = handleData;
@@ -124,7 +124,7 @@ const handleData = (action: any) => {
   if (action.items.length < 0) {
     return;
   }
-  const handleData = action.items.map((value: any) => ({
+  const handleData = action.items?.map((value: any) => ({
     ...value.data,
     _id: value.data.variants._id,
     id: value.data._id,

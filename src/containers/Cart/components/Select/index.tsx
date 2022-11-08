@@ -75,7 +75,7 @@ const Select: FC<ISelect> = ({ data }) => {
         <SelectListBox>
           {isOpen && (
             <SelectList ref={ref}>
-              {dataList.map(
+              {dataList?.map(
                 (value) =>
                   value.id !== selected?.id && (
                     <SelectItem

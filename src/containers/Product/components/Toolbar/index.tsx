@@ -59,7 +59,7 @@ const Toolbar: FC<IToolbar> = ({ gap, count }) => {
 
   const handleDataSelect = () => {
     setDataSelect(
-      [...dataSelect].map((value) => ({
+      [...dataSelect]?.map((value) => ({
         ...value,
         query: handleQueryString(value?.query),
       }))

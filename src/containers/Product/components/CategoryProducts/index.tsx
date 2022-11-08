@@ -47,7 +47,7 @@ const CategoryProduct: FC<ICategoryProduct> = ({ products, gapX }) => {
     <CategoryProductContainer>
       <CategoryProductList className={`gap-x-${gapX}`}>
         {products &&
-          products.map((value) => (
+          products?.map((value) => (
             <CategoryProductItem key={value._id}>
               <ProductCard
                 isCheck={handleCheckIsLike(value._id)}

@@ -49,7 +49,7 @@ const Paypal: FC<IPaypal> = ({ price, data }) => {
   }, []);
 
   const handleItemList = () => {
-    let resultData = data.map((value) => ({
+    let resultData = data?.map((value) => ({
       name: value.name,
       quantity: value.quantity + "",
       sku: value.variants._id,

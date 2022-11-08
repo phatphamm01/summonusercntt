@@ -97,7 +97,7 @@ const Select: FC<ISelect> = ({ list }) => {
             <TitleBig onClick={setIsActive}>Select Size</TitleBig>
             <SelectList>
               {list &&
-                list.map((value) => (
+                list?.map((value) => (
                   <SelectItem data-element="select-pay">
                     <ItemSize>{value.size}</ItemSize>
                     <ItemPrice>${value.price}</ItemPrice>

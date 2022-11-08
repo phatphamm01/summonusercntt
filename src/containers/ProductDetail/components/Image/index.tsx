@@ -42,7 +42,7 @@ const Image: FC<IImage> = ({ images, imageCover, name = "" }) => {
     useState<{ id: number; urlSmall: string; urlBig: string }>();
 
   useEffect(() => {
-    let imagesNew = images.map((value, index) => ({
+    let imagesNew = images?.map((value, index) => ({
       id: index,
       urlSmall: imageCover[index] ? imageCover[index] : value,
       urlBig: value ? value : imageCover[index],
@@ -64,7 +64,7 @@ const Image: FC<IImage> = ({ images, imageCover, name = "" }) => {
       <ListImageBox>
         <ListImage>
           {arrImages &&
-            arrImages.map((value) => (
+            arrImages?.map((value) => (
               <ImageItem
                 onClick={() => handeleSelect(value)}
                 isActive={value.id === selected?.id}
