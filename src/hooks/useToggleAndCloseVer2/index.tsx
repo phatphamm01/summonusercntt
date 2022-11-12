@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useState } from "react";
+import { RefObject, useCallback, useEffect, useState } from 'react';
 
 const useToggleAndCloseVer2 = (
   ref: RefObject<HTMLElement>,
@@ -6,27 +6,30 @@ const useToggleAndCloseVer2 = (
 ): [boolean, any] => {
   const [state, setState] = useState<boolean>(initialState);
 
-  const handleClose = useCallback((e: MouseEvent) => {
-    const element: HTMLDivElement | null = e?.target as HTMLDivElement;
+  const handleClose = useCallback(
+    (e: MouseEvent) => {
+      const element: HTMLDivElement | null = e?.target as HTMLDivElement;
 
-    if (ref && ref.current) {
-      const isFound = !ref.current.contains(element);
+      if (ref && ref.current) {
+        const isFound = !ref.current.contains(element);
 
-      if (isFound) {
-        setState(false);
+        if (isFound) {
+          setState(false);
+        }
       }
-    }
-  }, []);
+    },
+    [ref]
+  );
 
   useEffect(() => {
     let { current } = ref;
 
     if (current) {
-      document.addEventListener("mousedown", handleClose, false);
+      document.addEventListener('mousedown', handleClose, false);
     } else {
-      document.removeEventListener("mousedown", handleClose, false);
+      document.removeEventListener('mousedown', handleClose, false);
     }
-  }, [state]);
+  }, [handleClose, ref, state]);
 
   const toggle = useCallback((): void => setState((state) => !state), []);
   return [state, toggle];

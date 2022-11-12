@@ -1,10 +1,10 @@
-import ProductCard from "@components/ProductCard";
-import { FC, useCallback } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import { useAppSelector } from "@hooks/redux";
-import { IProduct } from "@redux/types/product";
-import { IWish } from "@redux/types/user";
+import { FC, useCallback } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import ProductCard from '~/components/ProductCard';
+import { useAppSelector } from '~/hooks/redux';
+import { IProduct } from '~/store/types/product';
+import { IWish } from '~/store/types/user';
 
 const CategoryProductContainer = styled.div`
   ${tw``}

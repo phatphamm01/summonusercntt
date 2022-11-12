@@ -1,9 +1,9 @@
-import Link from "@designs/Link";
-import { ICategory } from "@redux/types/common";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import NavImage from "./components/NavImage";
+import { FC, useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import NavImage from './components/NavImage';
+import Link from '~/designs/Link';
+import { ICategory } from '~/store/common/types';
 
 const CategoryContainer = styled.div`
   ${tw`w-full`}
@@ -24,19 +24,19 @@ const NavTitle = styled.p`
 const NavList = styled.a`
   ${tw`block align-top whitespace-normal`}
 `;
-const CategoryLeve2 = styled.div`
+const CategoryLevel2 = styled.div`
   ${tw`not-last:pt-20 before:bg-gray-300 relative`}
 
   &:not(:last-child):before {
-    content: "";
+    content: '';
     position: absolute;
     height: 300px;
     width: 1px;
     left: -2.5rem;
   }
 `;
-const CategoryLeve3 = styled.a`
-  ${tw`block break-words line-height[1.1] text-xl`}
+const CategoryLevel3 = styled.a`
+  ${tw`block break-words [line-height:1.1] text-xl`}
 `;
 
 interface INavDetail {
@@ -65,26 +65,7 @@ const NavDetail: FC<INavDetail> = ({ data }) => {
 
   const [column, setColumn] = useState<number>(0);
 
-  useEffect(() => {
-    let result = handleDataUI();
-
-    if (!result) return;
-
-    setLengthCategoryLevel1(result.category1);
-    setLengthCategoryLevel2(result.category2);
-    setColumn(
-      result.category2.reduce(
-        (result: number, value: ILength) => result + value.len + 1,
-        0
-      ) + 2
-    );
-  }, []);
-
-  const divide = (divisor: number, divider: number) => {
-    return (divisor - (divisor % divider)) / divider;
-  };
-
-  const handleDataUI = (): IDataUI | undefined => {
+  const handleDataUI = useCallback((): IDataUI | undefined => {
     if (!data) return undefined;
 
     let category1 = data.length;
@@ -137,6 +118,25 @@ const NavDetail: FC<INavDetail> = ({ data }) => {
       category1: category1,
       category2: category2,
     };
+  }, [data]);
+
+  useEffect(() => {
+    let result = handleDataUI();
+
+    if (!result) return;
+
+    setLengthCategoryLevel1(result.category1);
+    setLengthCategoryLevel2(result.category2);
+    setColumn(
+      result.category2.reduce(
+        (result: number, value: ILength) => result + value.len + 1,
+        0
+      ) + 2
+    );
+  }, [handleDataUI]);
+
+  const divide = (divisor: number, divider: number) => {
+    return (divisor - (divisor % divider)) / divider;
   };
 
   const handleChunkArray = (
@@ -174,32 +174,32 @@ const NavDetail: FC<INavDetail> = ({ data }) => {
           }}
         >
           {data &&
-            data?.map((catagoryLevel2) => (
-              <CategoryLeve2
-                key={catagoryLevel2._id}
+            data?.map((categoryLevel2) => (
+              <CategoryLevel2
+                key={categoryLevel2._id}
                 style={{
-                  gridColumn: `${handleColumn(catagoryLevel2._id)}`,
+                  gridColumn: `${handleColumn(categoryLevel2._id)}`,
                 }}
               >
                 <Link
-                  href={`/category/${catagoryLevel2._id}/${catagoryLevel2.slug}`}
+                  href={`/category/${categoryLevel2._id}/${categoryLevel2.slug}`}
                 >
-                  <NavTitle>{catagoryLevel2.name}</NavTitle>
+                  <NavTitle>{categoryLevel2.name}</NavTitle>
                 </Link>
-                <div style={{ display: "flex", gap: "30px" }}>
+                <div style={{ display: 'flex', gap: '30px' }}>
                   {handleChunkArray(
-                    catagoryLevel2?.children,
+                    categoryLevel2?.children,
                     LENGTH_CATEGORY
                   )?.map(
-                    (listCatagoryLevel3: Array<ICategory>, index: number) => (
+                    (listCategoryLevel3: Array<ICategory>, index: number) => (
                       <div key={index}>
-                        {listCatagoryLevel3?.map(
-                          (catagoryLevel3: ICategory) => (
-                            <span key={catagoryLevel3._id}>
+                        {listCategoryLevel3?.map(
+                          (categoryLevel3: ICategory) => (
+                            <span key={categoryLevel3._id}>
                               <Link
-                                href={`/category/${catagoryLevel3._id}/${catagoryLevel3.slug}`}
+                                href={`/category/${categoryLevel3._id}/${categoryLevel3.slug}`}
                               >
-                                <NavList>{catagoryLevel3.name}</NavList>
+                                <NavList>{categoryLevel3.name}</NavList>
                               </Link>
                             </span>
                           )
@@ -208,17 +208,17 @@ const NavDetail: FC<INavDetail> = ({ data }) => {
                     )
                   )}
                 </div>
-              </CategoryLeve2>
+              </CategoryLevel2>
             ))}
-          <CategoryLeve2
+          <CategoryLevel2
             style={{
               gridColumn: `${column - 1} / ${column}`,
             }}
           >
-            <CategoryLeve3>
+            <CategoryLevel3>
               <NavImage />
-            </CategoryLeve3>
-          </CategoryLeve2>
+            </CategoryLevel3>
+          </CategoryLevel2>
         </CategoryBox>
       </CategoryContainer>
     </NavDetailContainer>

@@ -1,13 +1,30 @@
-import type { NextPage } from "next";
-import { Fragment } from "react";
-import { END } from "redux-saga";
+import { Fragment } from 'react';
+import Account from '~/containers/Account';
+import MetaTitle from '~/designs/MetaTitle';
+import { useUpdateStore } from '~/hooks/useUpdateStore';
+import { commonStore } from '~/store/common';
+import { StoreName } from '~/store/type';
+import { GetStaticProps, NextPageProps } from '~/types/nextjs';
+import fetchCommon from '~/services/common';
 
-import Account from "@containers/Account";
-import MetaTitle from "@designs/MetaTitle";
-import { wrapper } from "@redux/store";
-import { getCategories } from "@redux/slices/common";
+export const getStaticProps: GetStaticProps = async () => {
+  const categories = fetchCommon.getCategories();
 
-const AccountPage: NextPage = (props) => {
+  commonStore.getState().setCategories((await categories).data as any);
+  return {
+    props: {
+      data: [
+        {
+          type: StoreName.COMMON,
+          data: { categories: commonStore.getState().categories },
+        },
+      ],
+    },
+  };
+};
+
+const AccountPage: NextPageProps<typeof getStaticProps> = ({ data }) => {
+  useUpdateStore(data);
   return (
     <Fragment>
       <MetaTitle title="Fashion" />
@@ -17,15 +34,3 @@ const AccountPage: NextPage = (props) => {
 };
 
 export default AccountPage;
-
-export const getStaticProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const { dispatch, sagaTask } = store;
-
-    dispatch(getCategories());
-
-    dispatch(END);
-    await sagaTask.toPromise();
-    return { props: {} };
-  }
-);

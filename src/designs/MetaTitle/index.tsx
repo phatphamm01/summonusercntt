@@ -1,5 +1,5 @@
-import Head from "next/head";
-import { TITLE_DEFAULT } from "@common/constants";
+import Head from 'next/head';
+import { TITLE_DEFAULT } from '~/common/constants';
 
 interface ITitle {
   title: string;

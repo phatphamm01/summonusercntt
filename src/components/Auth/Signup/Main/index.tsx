@@ -1,14 +1,14 @@
-import { AuthContext } from "@components/Auth";
-import Button from "@designs/Button";
-import Input from "@designs/Input";
-import fetchAuth from "@services/auth";
-import { Formik } from "formik";
-import { FC, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import styled from "styled-components";
-import tw from "twin.macro";
-import * as Yup from "yup";
-import { EmailContext } from "../index";
+import { Formik } from 'formik';
+import { FC, useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import * as Yup from 'yup';
+import { EmailContext } from '../index';
+import { AuthContext } from '~/components/Auth';
+import Button from '~/designs/Button';
+import Input from '~/designs/Input';
+import fetchAuth from '~/services/auth';
 
 const LoginContainer = styled.div`
   ${tw``}
@@ -42,8 +42,8 @@ const Main: FC<IMain> = ({ handleClickVerify }) => {
   const { setTitle, setStateForm } = useContext(AuthContext);
 
   useEffect(() => {
-    setTitle?.("Signup");
-  }, []);
+    setTitle?.('Signup');
+  }, [setTitle]);
 
   const handleShowPassword = () => {
     setIsShowPassword(!isShowPassword);
@@ -52,40 +52,40 @@ const Main: FC<IMain> = ({ handleClickVerify }) => {
   return (
     <Formik
       initialValues={{
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
-        passwordConfirm: "",
-        phone: "",
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: '',
+        passwordConfirm: '',
+        phone: '',
       }}
       validationSchema={Yup.object().shape({
         firstname: Yup.string()
-          .max(20, "Firstname must not exceed 20 characters")
-          .required("Please enter your first name"),
+          .max(20, 'Firstname must not exceed 20 characters')
+          .required('Please enter your first name'),
         lastname: Yup.string()
-          .max(20, "Lastname must not exceed 20 characters")
-          .required("Please enter your last name"),
+          .max(20, 'Lastname must not exceed 20 characters')
+          .required('Please enter your last name'),
         email: Yup.string()
-          .email("Must be a valid email")
+          .email('Must be a valid email')
           .max(255)
-          .required("Please enter your email"),
+          .required('Please enter your email'),
         password: Yup.string()
-          .min(8, "Password is more than 8 characters")
-          .max(30, "Password must not exceed 30 characters")
-          .required("Please enter your password"),
+          .min(8, 'Password is more than 8 characters')
+          .max(30, 'Password must not exceed 30 characters')
+          .required('Please enter your password'),
         passwordConfirm: Yup.string()
-          .required("Please enter your confirm password")
-          .when("password", {
+          .required('Please enter your confirm password')
+          .when('password', {
             is: (val: string) => (val && val.length > 0 ? true : false),
             then: Yup.string().oneOf(
-              [Yup.ref("password")],
-              "Both password need to be the same"
+              [Yup.ref('password')],
+              'Both password need to be the same'
             ),
           }),
         phone: Yup.string()
-          .matches(phoneRegExp, "Phone number is not valid")
-          .required("Please enter your phone"),
+          .matches(phoneRegExp, 'Phone number is not valid')
+          .required('Please enter your phone'),
       })}
       onSubmit={async (dataForm: IFormValues) => {
         let payload = {
@@ -99,7 +99,7 @@ const Main: FC<IMain> = ({ handleClickVerify }) => {
 
         let result = await fetchAuth.signup(payload);
 
-        if (typeof result === "string") {
+        if (typeof result === 'string') {
           toast.error(result);
           return;
         }
@@ -154,7 +154,7 @@ const Main: FC<IMain> = ({ handleClickVerify }) => {
               <Input
                 name="password"
                 title="Password"
-                type={isShowPassword ? "text" : "password"}
+                type={isShowPassword ? 'text' : 'password'}
                 value={values.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -170,7 +170,7 @@ const Main: FC<IMain> = ({ handleClickVerify }) => {
               <Input
                 name="passwordConfirm"
                 title="Confirm Password"
-                type={isShowPassword ? "text" : "password"}
+                type={isShowPassword ? 'text' : 'password'}
                 value={values.passwordConfirm}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -198,12 +198,12 @@ const Main: FC<IMain> = ({ handleClickVerify }) => {
                   Create account
                 </Button>
                 <Text>
-                  By creating an account you agree to our <b>Terms</b> &{" "}
+                  By creating an account you agree to our <b>Terms</b> &{' '}
                   <b>Conditions</b>
                 </Text>
                 <Button
                   type="button"
-                  onClick={() => setStateForm?.("LOGIN")}
+                  onClick={() => setStateForm?.('LOGIN')}
                   variant="outlined"
                 >
                   Alerady have an acctiont? Login

@@ -1,7 +1,7 @@
-import { FC, useContext } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import { PopupContext } from "@components/Layout";
+import { FC, useContext } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { PopupContext } from '~/components/Layout';
 
 const PopupContainer = styled.div`
   ${tw`fixed w-[100%] h-[100vh] z-[999999999999] flex justify-center items-center`}

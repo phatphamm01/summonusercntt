@@ -1,8 +1,8 @@
-import * as toolkit from "@reduxjs/toolkit";
-import { Task, Store as StoreRedux } from "redux-saga";
-import { Persistor } from "redux-persist";
+import * as toolkit from '@reduxjs/toolkit';
+import { Persistor } from 'redux-persist';
+import { Store as StoreRedux, Task } from 'redux-saga';
 
-declare module "@reduxjs/toolkit" {
+declare module '@reduxjs/toolkit' {
   interface Store extends StoreRedux {
     sagaTask: Task;
     __persistor: Persistor;

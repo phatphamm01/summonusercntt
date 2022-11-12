@@ -1,6 +1,6 @@
-import { FC } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
+import { FC } from 'react';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
 
 const NavDetailMobileItemContainer = styled.div<{ iconLeft: boolean }>`
   ${tw`py-6 px-4 border-b relative hover:bg-gray-100`}
@@ -9,7 +9,7 @@ const NavDetailMobileItemContainer = styled.div<{ iconLeft: boolean }>`
     iconLeft &&
     css`
       &:before {
-        content: "";
+        content: '';
         position: absolute;
         height: 10px;
         aspect-ratio: 1 / 1;

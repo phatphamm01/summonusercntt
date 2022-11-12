@@ -1,13 +1,13 @@
-import Button from "@designs/Button";
-import IconSVG from "@designs/IconSVG";
-import SelectVariant from "@designs/SelectVariant";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { addWishlist, deleteCart } from "@redux/slices/user";
-import { ICart, IWish } from "@redux/types/user";
-import { FC, useCallback, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
-import Select from "../Select";
+import { FC, useCallback, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
+import Select from '../Select';
+import Button from '~/designs/Button';
+import IconSVG from '~/designs/IconSVG';
+import { userStore } from '~/store/user';
+import { ICart, IWish } from '~/store/user/types';
+import fetchCart from '~/services/cart';
+import fetchWishlist from '~/services/wishlist';
 
 const ItemContainer = styled.div`
   ${tw`py-8`}
@@ -34,7 +34,7 @@ const Name = styled.p`
   ${tw`text-xs `}
 `;
 const Price = styled.p`
-  ${tw`font-bold text-4xl text-gray-600 line-height[1]`}
+  ${tw`font-bold text-4xl text-gray-600 [line-height:1]`}
 `;
 const InfoBox = styled.div`
   ${tw`flex justify-between items-center flex-grow`}
@@ -78,16 +78,26 @@ interface IItem {
 }
 
 const Item: FC<IItem> = ({ data }) => {
-  const dispatch = useAppDispatch();
   const [isLike, setIsLike] = useState<boolean>(false);
-  const { wishlist } = useAppSelector((state) => state.userReducers);
+  const wishlist = userStore((s) => s.wishlist);
+
+  const handleCheckIsLike = useCallback(
+    (id: string) => {
+      if (!(wishlist && wishlist.length > 0)) return false;
+
+      let index = wishlist.findIndex((value: IWish) => value._id === id);
+
+      if (index === -1) return false;
+      return true;
+    },
+    [wishlist]
+  );
 
   useEffect(() => {
     let checkIsLike = handleCheckIsLike(data?.idProduct!);
-    console.log(checkIsLike);
 
     setIsLike(checkIsLike);
-  }, [wishlist]);
+  }, [data?.idProduct, handleCheckIsLike, wishlist]);
 
   const handleAddWishlist = () => {
     setIsLike(!isLike);
@@ -95,28 +105,21 @@ const Item: FC<IItem> = ({ data }) => {
     addWishlistApi();
   };
 
-  const addWishlistApi = () => {
+  const addWishlistApi = async () => {
     let payload = {
       product: data.idProduct!,
     };
-    dispatch(addWishlist(payload));
+    const wishlist = await fetchWishlist.add(payload);
+    userStore.getState().setWishlist(wishlist);
   };
 
   const handleDelete = () => {
     callDeleteApi(data._id);
   };
 
-  const callDeleteApi = (id: string) => {
-    dispatch(deleteCart({ id: id }));
-  };
-
-  const handleCheckIsLike = (id: string) => {
-    if (!(wishlist && wishlist.length > 0)) return false;
-
-    let index = wishlist.findIndex((value: IWish) => value._id === id);
-
-    if (index === -1) return false;
-    return true;
+  const callDeleteApi = async (id: string) => {
+    const cart = await fetchCart.deleteCart({ id });
+    userStore.getState().setCart(cart);
   };
 
   return (
@@ -128,8 +131,8 @@ const Item: FC<IItem> = ({ data }) => {
         <ItemMain>
           <Design>{data.name}</Design>
           <IdProdcut>
-            Product number:{" "}
-            {data.variants.sizeId ? data.variants.sizeId : "Default"}
+            Product number:{' '}
+            {data.variants.sizeId ? data.variants.sizeId : 'Default'}
           </IdProdcut>
           <Name>{data.name}</Name>
           <InfoBox>
@@ -148,7 +151,7 @@ const Item: FC<IItem> = ({ data }) => {
                 <HeartBox isCheck={isLike}>
                   <IconSVG iconHref="/icon.svg#svgs-wishlist" />
                 </HeartBox>
-                <ButtonText>{isLike ? "Remove" : "Add"} Wishlist</ButtonText>
+                <ButtonText>{isLike ? 'Remove' : 'Add'} Wishlist</ButtonText>
               </ButtonContent>
             </ButtonWrraper>
           </ControlBox>

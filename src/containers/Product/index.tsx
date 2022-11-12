@@ -1,16 +1,16 @@
-import Filter from "@components/Filter";
-import Layout from "@components/Layout";
-import Breadcrumb from "@components/Breadcrumb";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { getProductsByType } from "@redux/slices/product";
-import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import CategoryProduct from "./components/CategoryProducts";
-import Toolbar from "./components/Toolbar";
-import ToolbarMobile from "./components/ToolbarMobile";
-import { IFacet, IGetProductsByTypePayload } from "@redux/types/product";
+import { useRouter } from 'next/router';
+import { FC, useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import CategoryProduct from './components/CategoryProducts';
+import Toolbar from './components/Toolbar';
+import ToolbarMobile from './components/ToolbarMobile';
+import Breadcrumb from '~/components/Breadcrumb';
+import Filter from '~/components/Filter';
+import Layout from '~/components/Layout';
+import { productStore } from '~/store/product';
+import { IFacet, IGetProductsByTypePayload } from '~/store/product/types';
+import fetchProduct from '~/services/products';
 
 const ProductContainer = styled.div<{ isActive: boolean }>`
   ${tw`container lg:max-w-full mx-auto xl:px-4 lg:mt-10 px-20 `}
@@ -51,7 +51,6 @@ interface IProduct {}
 const GAPCOMMON = 20;
 
 const Product: FC<IProduct> = () => {
-  const dispatch = useAppDispatch();
   const {
     query: { slug },
   } = useRouter();
@@ -59,9 +58,10 @@ const Product: FC<IProduct> = () => {
   const [query, setQuery] = useState<string>();
   const [isActive, setActive] = useState<boolean>(false);
 
-  const { productsByType, facets } = useAppSelector(
-    (state) => state.productReducers
-  );
+  const [productsByType, facets] = productStore((s) => [
+    s.productsByType,
+    s.facets,
+  ]);
 
   useEffect(() => {
     let url = new URL(location.origin + router.asPath);
@@ -70,14 +70,19 @@ const Product: FC<IProduct> = () => {
     setQuery(p);
   }, [router.asPath]);
 
-  useEffect(() => {
+  const getProductDetail = useCallback(async () => {
     if (!slug?.[0]) return;
 
     let payload: IGetProductsByTypePayload = { id: slug[0] };
     payload.params = query ? query : undefined;
 
-    dispatch(getProductsByType(payload));
-  }, [query]);
+    const productDetail = await fetchProduct.getProductByType(payload);
+    productStore.getState().setProductDetail(productDetail);
+  }, [query, slug]);
+
+  useEffect(() => {
+    getProductDetail();
+  }, [getProductDetail]);
 
   const handleActive = () => {
     setActive(!isActive);

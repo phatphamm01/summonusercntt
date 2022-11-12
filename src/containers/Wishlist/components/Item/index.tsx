@@ -1,12 +1,12 @@
-import Button from "@designs/Button";
-import SelectVariant from "@designs/SelectVariant";
-import { useAppDispatch } from "@hooks/redux";
-import { addCart, addWishlist } from "@redux/slices/user";
-import { IWish } from "@redux/types/user";
-import fetchProduct from "@services/products";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { FC, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import Button from '~/designs/Button';
+import SelectVariant from '~/designs/SelectVariant';
+import { userStore } from '~/store/user';
+import { IWish } from '~/store/user/types';
+import fetchCart from '~/services/cart';
+import fetchWishlist from '~/services/wishlist';
 
 const ItemContainer = styled.div`
   ${tw``}
@@ -57,8 +57,7 @@ interface IItem {
 }
 
 const Item: FC<IItem> = ({ data }) => {
-  const dispatch = useAppDispatch();
-  const [variantId, setVariantId] = useState<string>("");
+  const [variantId, setVariantId] = useState<string>('');
   const [funcSelect, setFuncSelect] = useState<() => void>();
 
   function handleAddCart(): void {
@@ -71,18 +70,23 @@ const Item: FC<IItem> = ({ data }) => {
     addCartApi();
   }
 
-  const addWishlistApi = () => {
-    if (data._id) {
-      let payload = {
-        product: data._id,
-      };
+  const addWishlistApi = async () => {
+    if (!data._id) return;
 
-      dispatch(addWishlist(payload));
-    }
+    const wishlist = await fetchWishlist.add({
+      product: data._id,
+    });
+
+    userStore.getState().setWishlist(wishlist);
   };
 
-  const addCartApi = () => {
-    dispatch(addCart({ productVariation: variantId, quantity: 1 }));
+  const addCartApi = async () => {
+    const card = await fetchCart.add({
+      productVariation: variantId,
+      quantity: 1,
+    });
+
+    userStore.getState().setCart(card);
   };
 
   return (

@@ -1,25 +1,19 @@
-import { useAppSelector } from "@hooks/redux";
-import { INavItem } from "@interfaces/UI/INavItem";
-import {
-  ChangeEvent,
-  FC,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import HeaderTop from "./components/HeaderTop";
-import Nav from "./components/Nav";
-import NavMobile from "./components/NavMobile";
-import useToggleAndCloseVer2 from "@hooks/useToggleAndCloseVer2";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import HeaderTop from './components/HeaderTop';
+import Nav from './components/Nav';
+import NavMobile from './components/NavMobile';
+import useToggleAndCloseVer2 from '~/hooks/useToggleAndCloseVer2';
+import { commonStore } from '~/store/common';
+import { INavItem } from '~/types/UI/INavItem';
+
 const HeaderContainer = styled.div<{ isScroll: boolean }>`
   ${tw`fixed top-0 right-0 left-0 z-50 bg-white`}
   transition: transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: ${({ isScroll }) =>
-    isScroll ? "translateY(-100px)" : "translateY(0)"};
+    isScroll ? 'translateY(-100px)' : 'translateY(0)'};
 `;
 
 const HeaderBox = styled.header`
@@ -31,7 +25,7 @@ const HeaderTopContainer = styled.div`
 
 const NavContainer = styled.div<{ isSearch: boolean }>`
   ${tw`container mx-auto pt-12 pb-5`};
-  ${({ isSearch }) => (isSearch ? tw`relative` : "")}
+  ${({ isSearch }) => (isSearch ? tw`relative` : '')}
 `;
 
 const SearchBox = styled.div`
@@ -44,7 +38,7 @@ const Close = styled.div`
   ${tw`relative cursor-pointer`}
 
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     height: 3px;
     width: 20px;
@@ -54,7 +48,7 @@ const Close = styled.div`
   }
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     height: 3px;
     width: 20px;
@@ -71,7 +65,7 @@ interface IHeader {}
 
 const Header: FC<IHeader> = () => {
   const router = useRouter();
-  const { categories } = useAppSelector((state) => state.commonReducers);
+  const categories = commonStore((s) => s.categories);
   const [isScroll, setIsScroll] = useState<boolean>(false);
   let lastScrollTop = useRef<number>(0);
 
@@ -92,27 +86,27 @@ const Header: FC<IHeader> = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll, false);
+    window.addEventListener('scroll', handleScroll, false);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll, false);
+      window.removeEventListener('scroll', handleScroll, false);
     };
-  }, []);
+  }, [handleScroll]);
 
   //Handle Click Search
   const ref = useRef<HTMLDivElement>(null);
   const [isSearch, setIsSearch] = useToggleAndCloseVer2(ref);
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>('');
 
   const handleClickSearch = () => {
     setIsSearch(!isSearch);
   };
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter") {
+    if (e.code === 'Enter') {
       e.preventDefault();
 
-      router.push("/search?key=" + value);
+      router.push('/search?key=' + value);
     }
   };
 
@@ -149,15 +143,15 @@ export default Header;
 
 const listNavMobile: Array<INavItem> = [
   {
-    link: "/new-in",
+    link: '/new-in',
     name: "What's New",
   },
   {
-    link: "/designer",
-    name: "Designers",
+    link: '/designer',
+    name: 'Designers',
   },
   {
-    link: "/lifestyle",
-    name: "Lifestyle",
+    link: '/lifestyle',
+    name: 'Lifestyle',
   },
 ];

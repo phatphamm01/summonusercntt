@@ -1,16 +1,17 @@
-import StorageToken from "@common/utils/storage";
-import Button from "@designs/Button";
-import Input from "@designs/Input";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { getCart, getUserSuccess, getWishlist } from "@redux/slices/user";
-import fetchAuth from "@services/auth";
-import { Formik } from "formik";
-import { FC, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import styled from "styled-components";
-import tw from "twin.macro";
-import * as Yup from "yup";
-import { AuthContext } from "..";
+import { Formik } from 'formik';
+import { FC, useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import * as Yup from 'yup';
+import { AuthContext } from '..';
+import StorageToken from '~/common/utils/storage';
+import Button from '~/designs/Button';
+import Input from '~/designs/Input';
+import { userStore } from '~/store/user';
+import fetchAuth from '~/services/auth';
+import fetchCart from '~/services/cart';
+import fetchWishlist from '~/services/wishlist';
 
 const LoginContainer = styled.div`
   ${tw``}
@@ -35,14 +36,13 @@ interface IFormValues extends ILogin {
 }
 
 const Main: FC<ILogin> = () => {
-  const dispatch = useAppDispatch();
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
 
   const { setTitle, setStateForm, handleCloseForm } = useContext(AuthContext);
 
   useEffect(() => {
-    setTitle?.("Login");
-  }, []);
+    setTitle?.('Login');
+  }, [setTitle]);
 
   const handleShowPassword = () => {
     setIsShowPassword(!isShowPassword);
@@ -51,33 +51,35 @@ const Main: FC<ILogin> = () => {
   return (
     <Formik
       initialValues={{
-        email: "",
-        password: "",
+        email: '',
+        password: '',
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string()
-          .email("Must be a valid email")
+          .email('Must be a valid email')
           .max(255)
-          .required("Please enter your email"),
+          .required('Please enter your email'),
         password: Yup.string()
-          .min(6, "Password is more than 6 characters")
-          .max(30, "Username less than 20 characters")
-          .required("Please enter your password"),
+          .min(6, 'Password is more than 6 characters')
+          .max(30, 'Username less than 20 characters')
+          .required('Please enter your password'),
       })}
       onSubmit={async (payload: IFormValues) => {
         try {
           let result = await fetchAuth.login(payload);
 
-          if (typeof result === "string") {
+          if (typeof result === 'string') {
             toast.error(result);
             return;
           }
 
           StorageToken.setUser(result.token);
 
-          dispatch(getUserSuccess({ payload: result.data }));
-          dispatch(getWishlist());
-          dispatch(getCart());
+          userStore.getState().setUser(result.data);
+          const wishlist = await fetchWishlist.get();
+          userStore.getState().setCart(wishlist);
+          const cart = await fetchCart.get();
+          userStore.getState().setCart(cart);
 
           handleCloseForm?.();
         } catch (error: any) {
@@ -111,7 +113,7 @@ const Main: FC<ILogin> = () => {
               <Input
                 name="password"
                 title="Password"
-                type={isShowPassword ? "text" : "password"}
+                type={isShowPassword ? 'text' : 'password'}
                 value={values.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -125,7 +127,7 @@ const Main: FC<ILogin> = () => {
                 }
               />
               <ForgotPassword>
-                <ForgotText onClick={() => setStateForm?.("FORGOT_PASSWORD")}>
+                <ForgotText onClick={() => setStateForm?.('FORGOT_PASSWORD')}>
                   Forgot Password ?
                 </ForgotText>
               </ForgotPassword>
@@ -135,7 +137,7 @@ const Main: FC<ILogin> = () => {
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => setStateForm?.("SIGNUP")}
+                  onClick={() => setStateForm?.('SIGNUP')}
                   variant="outlined"
                 >
                   New to Summon Shop? Create account

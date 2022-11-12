@@ -1,8 +1,8 @@
-import { FC, Fragment } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import { IBillList } from "@redux/types/user";
-import moment from "moment";
+import moment from 'moment';
+import { FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { IBillList } from '~/store/user/types';
 
 const TableContainer = styled.table`
   ${tw`w-full`}
@@ -11,7 +11,7 @@ const TableContainer = styled.table`
 const Header = styled.tr`
   ${tw``}
 `;
-const HedaerItem = styled.th`
+const HeaderItem = styled.th`
   ${tw`py-4 px-4 border border-gray-400 bg-green-400 text-white font-semibold text-sm`}
 `;
 
@@ -31,19 +31,19 @@ const Table: FC<IItem> = ({ data }) => {
   return (
     <TableContainer>
       <Header>
-        <HedaerItem>ID1</HedaerItem>
-        <HedaerItem>Amout</HedaerItem>
-        <HedaerItem>Quantity</HedaerItem>
-        <HedaerItem>Create At</HedaerItem>
-        <HedaerItem>Action</HedaerItem>
+        <HeaderItem>ID1</HeaderItem>
+        <HeaderItem>Amout</HeaderItem>
+        <HeaderItem>Quantity</HeaderItem>
+        <HeaderItem>Create At</HeaderItem>
+        <HeaderItem>Action</HeaderItem>
       </Header>
-      {data?.map((value) => {
-        let date = moment(Date.parse(value.createAt + "")).format(
-          "MMMM Do YYYY, h:mm:ss a"
+      {data.map((value) => {
+        let date = moment(Date.parse(value.createAt + '')).format(
+          'MMMM Do YYYY, h:mm:ss a'
         );
 
         return (
-          <Tr>
+          <Tr key={value._id}>
             <Td>{value._id}</Td>
             <Td>{value.amount}</Td>
             <Td>{value.quantity}</Td>

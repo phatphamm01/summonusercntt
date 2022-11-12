@@ -1,10 +1,10 @@
-import useToggleAndClose from "@hooks/useToggleAndClose";
-import { IItemSelect } from "@interfaces/UI/IItemSelect";
-import { useRouter } from "next/router";
-import { FC, useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
-import Skeleton from "react-loading-skeleton";
+import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
+import useToggleAndClose from '~/hooks/useToggleAndClose';
+import { IItemSelect } from '~/types/UI/IItemSelect';
 
 const SelectContainer = styled.div`
   ${tw`text-lg bg-white  lg:max-w-full max-w-[260px]`}
@@ -71,7 +71,7 @@ interface ISelect {
 }
 
 const Select: FC<ISelect> = ({ selected, data, onClick }) => {
-  const [isActive, setIsActive] = useToggleAndClose("select");
+  const [isActive, setIsActive] = useToggleAndClose('select');
   const [isSelected, setIsSelected] = useState<IItemSelect | undefined>();
   const router = useRouter();
 
@@ -81,7 +81,7 @@ const Select: FC<ISelect> = ({ selected, data, onClick }) => {
     );
 
     setIsSelected(data[index || 0]);
-  }, []);
+  }, [data, selected]);
 
   const handleSelect = (value: IItemSelect) => {
     if (value?.query) {
@@ -93,9 +93,9 @@ const Select: FC<ISelect> = ({ selected, data, onClick }) => {
 
   const handleRouter = (value: IItemSelect) => {
     let url = new URL(location.origin + router.asPath);
-    url.searchParams.delete("sort");
+    url.searchParams.delete('sort');
     let asPath = decodeURI(url.pathname + url.search);
-    let query = url.search ? "&" : "?";
+    let query = url.search ? '&' : '?';
     query += value?.query;
 
     router.push(`${asPath}${query}`, undefined, {

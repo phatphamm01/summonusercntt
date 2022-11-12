@@ -1,10 +1,10 @@
-import AxiosService from "@common/utils/axios";
+import AxiosService from '~/common/utils/axios';
 
 const url = {
-  get: "cart",
-  add: "cart/add-to-cart",
-  bill: "bill",
-  getBill: "bill/my-bill",
+  get: 'cart',
+  add: 'cart/add-to-cart',
+  bill: 'bill',
+  getBill: 'bill/my-bill',
   deleteBill: (id: string) => `cart/${id}`,
 };
 

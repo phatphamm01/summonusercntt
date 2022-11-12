@@ -1,6 +1,6 @@
-import { IUser } from "@redux/types/user";
-import jwt from "jwt-decode";
-import { setToken } from "../auth";
+import jwt from 'jwt-decode';
+import { setToken } from '../auth';
+import { IUser } from '~/store/types/user';
 
 interface IStorage {
   getUser: () => IUser | undefined;
@@ -12,11 +12,7 @@ const StorageToken: IStorage = {
     setToken(token);
   },
   getUser: () => {
-    const ISSERVER = typeof window === "undefined";
-    let token: string = "";
-    if (!ISSERVER) {
-      token = localStorage.getItem("token") || "";
-    }
+    let token = localStorage.getItem('token') || '';
 
     if (!token) return undefined;
 

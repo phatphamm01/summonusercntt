@@ -1,14 +1,14 @@
-import { AuthContext } from "@components/Auth";
-import Button from "@designs/Button";
-import Input from "@designs/Input";
-import fetchAuth from "@services/auth";
-import { Formik } from "formik";
-import { FC, useContext, useEffect } from "react";
-import { toast } from "react-toastify";
-import styled from "styled-components";
-import tw from "twin.macro";
-import * as Yup from "yup";
-import { EmailContext } from "..";
+import { Formik } from 'formik';
+import { FC, useContext, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import * as Yup from 'yup';
+import { EmailContext } from '..';
+import { AuthContext } from '~/components/Auth';
+import Button from '~/designs/Button';
+import Input from '~/designs/Input';
+import fetchAuth from '~/services/auth';
 
 const LoginContainer = styled.div`
   ${tw``}
@@ -39,26 +39,27 @@ interface IFormValues {
 const Main: FC<ILogin> = ({ handleClickVerify }) => {
   const { setTitle, setStateForm } = useContext(AuthContext);
   const { setEmail } = useContext(EmailContext);
+
   useEffect(() => {
-    setTitle?.("Forgot Password");
-  }, []);
+    setTitle?.('Forgot Password');
+  }, [setTitle]);
 
   return (
     <Formik
       initialValues={{
-        email: "",
+        email: '',
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string()
-          .email("Must be a valid email")
+          .email('Must be a valid email')
           .max(255)
-          .required("Please enter your email"),
+          .required('Please enter your email'),
       })}
       onSubmit={async (payload: IFormValues) => {
         try {
           let result = await fetchAuth.forgotPassword(payload);
 
-          if (typeof result === "string") {
+          if (typeof result === 'string') {
             toast.error(result);
             return;
           }
@@ -104,7 +105,7 @@ const Main: FC<ILogin> = ({ handleClickVerify }) => {
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => setStateForm?.("LOGIN")}
+                  onClick={() => setStateForm?.('LOGIN')}
                   variant="outlined"
                 >
                   It you can remember it, go back to login

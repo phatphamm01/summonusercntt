@@ -1,15 +1,17 @@
-import Layout from "@components/Layout";
-import Button from "@designs/Button";
-import IconSVG from "@designs/IconSVG";
-import SelectVariant from "@designs/SelectVariant";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { addCart, addWishlist } from "@redux/slices/user";
-import { IVariant } from "@redux/types/product";
-import { IWish } from "@redux/types/user";
-import { FC, useCallback, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
-import Image from "./components/Image";
+import { FC, useCallback, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
+import Image from './components/Image';
+import Layout from '~/components/Layout';
+import Button from '~/designs/Button';
+import IconSVG from '~/designs/IconSVG';
+import SelectVariant from '~/designs/SelectVariant';
+import { productStore } from '~/store/product';
+import { IVariant } from '~/store/product/types';
+import { userStore } from '~/store/user';
+import { IWish } from '~/store/user/types';
+import fetchCart from '~/services/cart';
+import fetchWishlist from '~/services/wishlist';
 
 const ProductDetailContainer = styled.div`
   ${tw`container lg:max-w-full mx-auto xl:px-4  mt-40 px-40`}
@@ -88,45 +90,13 @@ const HeartBox = styled.div<{ isCheck?: boolean }>`
 interface IProductDetail {}
 
 const ProductDetail: FC<IProductDetail> = () => {
-  const dispatch = useAppDispatch();
-  const { productDetail } = useAppSelector((state) => state.productReducers);
-  const { wishlist } = useAppSelector((state) => state.userReducers);
+  const productDetail = productStore((s) => s.productDetail);
+  const wishlist = userStore((s) => s.wishlist);
 
   const [isLike, setIsLike] = useState<boolean>();
-  const [variantId, setVariantId] = useState<string>("");
+  const [variantId, setVariantId] = useState<string>('');
   const [variant, setVariant] = useState<IVariant>();
   const [funcSelect, setFuncSelect] = useState<() => void>();
-
-  useEffect(() => {
-    let checkIsLike = handleCheckIsLike(productDetail?._id!);
-    setIsLike(checkIsLike);
-  }, []);
-
-  const handleAddWishlist = () => {
-    setIsLike(!isLike);
-
-    addWishlistApi();
-  };
-
-  const addWishlistApi = () => {
-    let payload = {
-      product: productDetail._id!,
-    };
-    dispatch(addWishlist(payload));
-  };
-
-  function handleAddCart(): void {
-    if (!variantId) {
-      funcSelect?.();
-      return;
-    }
-
-    addCartApi();
-  }
-
-  const addCartApi = () => {
-    dispatch(addCart({ productVariation: variantId, quantity: 1 }));
-  };
 
   const handleCheckIsLike = useCallback(
     (id: string) => {
@@ -139,6 +109,45 @@ const ProductDetail: FC<IProductDetail> = () => {
     },
     [wishlist]
   );
+
+  const handleAddWishlist = () => {
+    setIsLike(!isLike);
+
+    addWishlistApi();
+  };
+
+  const addWishlistApi = async () => {
+    if (!productDetail._id) return;
+    let payload = {
+      product: productDetail._id!,
+    };
+    const wishlist = await fetchWishlist.add(payload);
+
+    userStore.getState().setWishlist(wishlist);
+  };
+
+  function handleAddCart(): void {
+    if (!variantId) {
+      funcSelect?.();
+      return;
+    }
+
+    addCartApi();
+  }
+
+  const addCartApi = async () => {
+    const card = await fetchCart.add({
+      productVariation: variantId,
+      quantity: 1,
+    });
+
+    userStore.getState().setCart(card);
+  };
+
+  useEffect(() => {
+    let checkIsLike = handleCheckIsLike(productDetail?._id!);
+    setIsLike(checkIsLike);
+  }, [handleCheckIsLike, productDetail?._id]);
 
   return (
     <Layout>

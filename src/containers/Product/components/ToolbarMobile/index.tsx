@@ -1,9 +1,9 @@
-import Filter from "@components/Filter";
-import useWindowSize from "@hooks/useWindowSize";
-import { IFacet } from "@redux/types/product";
-import { FC, Fragment, memo } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { FC, Fragment, memo } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import Filter from '~/components/Filter';
+import useWindowSize from '~/hooks/useWindowSize';
+import { IFacet } from '~/store/types/product';
 
 const ToolbarMobileContainer = styled.div`
   ${tw`hidden lg:block`}

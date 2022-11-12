@@ -1,8 +1,8 @@
-import AxiosService from "@common/utils/axios";
+import AxiosService from '~/common/utils/axios';
 
 const url = {
-  get: "wishlist",
-  add: "wishlist/add",
+  get: 'wishlist',
+  add: 'wishlist/add',
 };
 
 const fetchWishlist = {

@@ -1,4 +1,4 @@
-import { ICategory } from "@redux/types/common";
+import { ICategory } from '~/store/common/types';
 
 const mapChildren: any = (catagories: Array<ICategory>) => {
   return catagories?.reduce(function (r: any, a: any) {

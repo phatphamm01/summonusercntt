@@ -1,7 +1,7 @@
-import Color from "color";
-import { CSSProperties, FC } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import Color from 'color';
+import { CSSProperties, FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
 const IconSVGContainer = styled.svg`
   ${tw`bg-transparent fill-[transparent] h-9 w-9`}

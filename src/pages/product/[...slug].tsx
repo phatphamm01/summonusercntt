@@ -1,31 +1,20 @@
-import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { Fragment } from "react";
-import { END } from "redux-saga";
-
-import ProductDetail from "@containers/ProductDetail";
-
-import { wrapper } from "@redux/store";
-import { getProductDetail } from "@redux/slices/product";
-import { getCategories } from "@redux/slices/common";
-import fetchProduct from "@services/products";
-import { getPathProductAll } from "@common/helper/product/getPathAllProduct";
-import { useAppSelector } from "@hooks/redux";
-import MetaTitle from "@designs/MetaTitle";
-
-const ProductDetailPage: NextPage = (props) => {
-  const { productDetail } = useAppSelector((state) => state.productReducers);
-  return (
-    <Fragment>
-      <MetaTitle title={productDetail?.name || "Product"} />
-      <ProductDetail />
-    </Fragment>
-  );
-};
-
-export default ProductDetailPage;
+import type { GetStaticPaths } from 'next';
+import { Fragment } from 'react';
+import { getPathProductAll } from '~/common/helper/product/getPathAllProduct';
+import { promiseAllSettled } from '~/common/utils/promise';
+import ProductDetail from '~/containers/ProductDetail';
+import MetaTitle from '~/designs/MetaTitle';
+import { commonStore } from '~/store/common';
+import { productStore } from '~/store/product';
+import { StoreName } from '~/store/type';
+import { GetStaticProps, NextPageProps } from '~/types/nextjs';
+import fetchCommon from '~/services/common';
+import fetchProduct from '~/services/products';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await fetchProduct.getAllProduct({});
+  console.log(data);
+
   const paths = getPathProductAll(data);
 
   return {
@@ -34,20 +23,45 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
-  (store) =>
-    async ({ params }) => {
-      const { dispatch, sagaTask } = store;
-      const { slug } = params as { slug: string[] };
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { slug } = params as { slug: string[] };
 
-      dispatch(getCategories());
-      dispatch(getProductDetail({ id: slug[0] }));
-      dispatch(END);
-      await sagaTask.toPromise();
+  const [categories, product] = await promiseAllSettled([
+    fetchCommon.getCategories(),
+    fetchProduct.getProductDetail({ id: slug[0] }),
+  ]);
 
-      return {
-        props: {},
-        revalidate: 10,
-      };
-    }
-);
+  commonStore.getState().setCategories(categories?.data as any);
+  productStore.getState().setProductDetail(product);
+
+  return {
+    props: {
+      data: [
+        {
+          type: StoreName.COMMON,
+          data: { categories: commonStore.getState().categories },
+        },
+        {
+          type: StoreName.PRODUCT,
+          data: { productDetail: productStore.getState().productDetail },
+        },
+      ],
+    },
+    revalidate: 10,
+  };
+};
+
+const ProductDetailPage: NextPageProps<typeof getStaticProps> = ({ data }) => {
+  console.log({ data });
+
+  const productDetail = productStore((s) => s.productDetail);
+  // useUpdateStore(data);
+  return (
+    <Fragment>
+      <MetaTitle title={productDetail?.name || 'Product'} />
+      <ProductDetail />
+    </Fragment>
+  );
+};
+
+export default ProductDetailPage;

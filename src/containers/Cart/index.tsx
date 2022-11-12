@@ -1,11 +1,11 @@
-import isNullObject from "@common/function/isNullObject";
-import Layout from "@components/Layout";
-import Paypal from "@components/PaypalButton";
-import { useAppSelector } from "@hooks/redux";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import Item from "./components/Item";
+import { FC, useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import Item from './components/Item';
+import isNullObject from '~/common/function/isNullObject';
+import Layout from '~/components/Layout';
+import Paypal from '~/components/PaypalButton';
+import { userStore } from '~/store/user';
 
 const CartContainer = styled.div`
   ${tw`container mx-auto mt-20 xl:px-20 lg:px-4 2xl:px-60 px-96`}
@@ -41,20 +41,20 @@ const PaypalBox = styled.div`
 interface ICart {}
 
 const Cart: FC<ICart> = () => {
-  const { cart } = useAppSelector((state) => state.userReducers);
+  const cart = userStore((s) => s.cart);
   const [total, setTotal] = useState<number>(0);
 
-  useEffect(() => {
-    handleTotalPrice();
-  }, [cart]);
-
-  const handleTotalPrice = () => {
+  const handleTotalPrice = useCallback(() => {
     let totalPrice = cart.reduce(
       (result: number, value) => result + value.price * value.quantity,
       0
     );
     setTotal(totalPrice);
-  };
+  }, [cart]);
+
+  useEffect(() => {
+    handleTotalPrice();
+  }, [cart, handleTotalPrice]);
 
   return (
     <Layout>
@@ -76,7 +76,7 @@ const Cart: FC<ICart> = () => {
                 <SubtotalPrice>${total}</SubtotalPrice>
               </Subtotal>
               <PaypalBox>
-                <Paypal data={cart} price={total + ""} />
+                <Paypal data={cart} price={total + ''} />
               </PaypalBox>
             </CartControl>
           )}

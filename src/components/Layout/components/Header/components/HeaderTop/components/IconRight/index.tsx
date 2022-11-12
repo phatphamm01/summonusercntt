@@ -1,10 +1,9 @@
-import { FC } from "react";
-
-import tw from "twin.macro";
-import styled from "styled-components";
-import HoverDropdown from "../HoverDropdown";
-import Link from "@designs/Link";
-import { IDropdown } from "@redux/types/ui";
+import { FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import HoverDropdown from '../HoverDropdown';
+import Link from '~/designs/Link';
+import { IDropdown } from '~/store/types/ui';
 
 const HoverDropdownBox = styled.div`
   ${tw`transition-all`}

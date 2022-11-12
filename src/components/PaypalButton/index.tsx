@@ -1,15 +1,14 @@
-import Item from "@components/Layout/components/Header/components/HeaderTop/components/HoverDropdown/components/Item";
-import { useAppDispatch } from "@hooks/redux";
 import {
   PayPalButtons,
   PayPalButtonsComponentProps,
   PayPalScriptProvider,
-} from "@paypal/react-paypal-js";
-import { addBill } from "@redux/slices/user";
-import { ICartList } from "@redux/types/user";
-import { FC, useEffect, useState, useRef } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+} from '@paypal/react-paypal-js';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { userStore } from '~/store/user';
+import { ICartList } from '~/store/user/types';
+import fetchCart from '~/services/cart';
 
 const PaypalContainer = styled.div`
   ${tw`z-0`}
@@ -35,28 +34,25 @@ export type PurchaseItem = {
   tax?: Amount;
   description?: string;
   sku?: string;
-  category?: "DIGITAL_GOODS" | "PHYSICAL_GOODS" | "DONATION";
+  category?: 'DIGITAL_GOODS' | 'PHYSICAL_GOODS' | 'DONATION';
 };
 
 const Paypal: FC<IPaypal> = ({ price, data }) => {
-  const dispatch = useAppDispatch();
-  const [dataItem, setDataItem] =
-    useState<{ data: PurchaseItem[]; quantity: number }>();
+  const [dataItem, setDataItem] = useState<{
+    data: PurchaseItem[];
+    quantity: number;
+  }>();
   // const [dataPaypal, setDataPaypal] = useState<any>();
   const dataPaypal = useRef<any>();
 
-  useEffect(() => {
-    setDataItem(handleItemList());
-  }, []);
-
-  const handleItemList = () => {
+  const handleItemList = useCallback(() => {
     let resultData = data?.map((value) => ({
       name: value.name,
-      quantity: value.quantity + "",
+      quantity: value.quantity + '',
       sku: value.variants._id,
       unit_amount: {
-        currency_code: "USD",
-        value: value.price + "",
+        currency_code: 'USD',
+        value: value.price + '',
       },
     }));
 
@@ -69,7 +65,11 @@ const Paypal: FC<IPaypal> = ({ price, data }) => {
       data: resultData,
       quantity: quantity,
     };
-  };
+  }, [data]);
+
+  useEffect(() => {
+    setDataItem(handleItemList());
+  }, [handleItemList]);
 
   const handleDataSuccess = () => {
     let quantityTotal = dataItem?.data.reduce(
@@ -86,21 +86,21 @@ const Paypal: FC<IPaypal> = ({ price, data }) => {
   };
 
   const paypalbuttonTransactionProps: PayPalButtonsComponentProps = {
-    style: { layout: "vertical" },
+    style: { layout: 'vertical' },
     createOrder(data, actions) {
       return actions.order.create({
-        intent: "CAPTURE",
+        intent: 'CAPTURE',
 
         purchase_units: [
           {
             items: dataItem?.data,
             amount: {
-              value: price + "",
-              currency_code: "USD",
+              value: price + '',
+              currency_code: 'USD',
               breakdown: {
                 item_total: {
-                  currency_code: "USD",
-                  value: price + "",
+                  currency_code: 'USD',
+                  value: price + '',
                 },
               },
             },
@@ -117,8 +117,11 @@ const Paypal: FC<IPaypal> = ({ price, data }) => {
       return actions.resolve();
     },
     onApprove(data, actions) {
-      return actions.order.capture().then((details) => {
-        dispatch(addBill(handleDataSuccess()));
+      return actions.order.capture().then(async (details) => {
+        const bills = await fetchCart.addBill(handleDataSuccess());
+        if (bills) {
+          userStore.getState().setCart([]);
+        }
       });
     },
   };
@@ -127,15 +130,15 @@ const Paypal: FC<IPaypal> = ({ price, data }) => {
     <PaypalContainer>
       <PayPalScriptProvider
         options={{
-          components: "buttons",
-          currency: "USD",
-          "client-id":
-            "AUYYe_jA-9FTUNZF-UFRISfMvUAnKTzxAb1pELVDW36PaFFvg_a3YXGJfgrc32USF79FL3C59jTluzvc",
+          components: 'buttons',
+          currency: 'USD',
+          'client-id':
+            'AUYYe_jA-9FTUNZF-UFRISfMvUAnKTzxAb1pELVDW36PaFFvg_a3YXGJfgrc32USF79FL3C59jTluzvc',
         }}
       >
         <PayPalButtons
           {...paypalbuttonTransactionProps}
-          style={{ layout: "horizontal" }}
+          style={{ layout: 'horizontal' }}
         />
       </PayPalScriptProvider>
     </PaypalContainer>

@@ -1,13 +1,11 @@
-import Layout from "@components/Layout";
-
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { searchProduct } from "@redux/slices/product";
-
-import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import CategoryProduct from "./components/CategoryProducts";
+import { useRouter } from 'next/router';
+import { FC, useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import CategoryProduct from './components/CategoryProducts';
+import Layout from '~/components/Layout';
+import { productStore } from '~/store/product';
+import fetchProduct from '~/services/products';
 
 const ProductContainer = styled.div<{ isActive: boolean }>`
   ${tw`container lg:max-w-full mx-auto xl:px-4 lg:mt-10 px-20 `}
@@ -30,42 +28,41 @@ interface IProduct {}
 const GAPCOMMON = 20;
 
 const Product: FC<IProduct> = () => {
-  const dispatch = useAppDispatch();
   const { query } = useRouter();
   const [isActive, setActive] = useState<boolean>(false);
-  const { searchProduct: data } = useAppSelector(
-    (state) => state.productReducers
-  );
+  const { searchProduct: data } = productStore((s) => s.searchProduct);
 
   let { key } = query;
 
-  useEffect(() => {
-    if (key) {
-      handleData();
-    }
-  }, [key, query]);
-
-  const handleData = () => {
+  const handleData = useCallback(() => {
     if (!key) return;
 
-    let _key = "";
+    let _key = '';
 
-    if (typeof key === "string") {
+    if (typeof key === 'string') {
       _key = key;
       getDataApi(_key);
       return;
     }
     getDataApi(_key[0]);
-  };
+  }, [key]);
 
-  const getDataApi = (key: string) => {
-    dispatch(searchProduct({ key: key }));
+  useEffect(() => {
+    if (key) {
+      handleData();
+    }
+  }, [handleData, key, query]);
+
+  const getDataApi = async (key: string) => {
+    const product = await fetchProduct.searchProduct({ key: key });
+
+    productStore.getState().setSearchProduct(product);
   };
 
   return (
     <Layout>
       <ProductContainer isActive={isActive}>
-        <Title>Search results found for "{key}"</Title>
+        <Title>Search results found for {`"{key}"`}</Title>
         <ProductMain>
           <CategoryProductContainer>
             <CategoryProduct gapX={GAPCOMMON} products={data} />

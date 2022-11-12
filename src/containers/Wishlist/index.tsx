@@ -1,9 +1,9 @@
-import Layout from "@components/Layout";
-import { useAppSelector } from "@hooks/redux";
-import { FC } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
-import Item from "./components/Item";
+import { FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import Item from './components/Item';
+import Layout from '~/components/Layout';
+import { useAppSelector } from '~/hooks/redux';
 
 const WishlistContainer = styled.div`
   ${tw`container lg:max-w-full mx-auto mt-10 lg:mt-10 lg:px-4 xl:px-[100px] 2xl:px-[200px] px-[260px]`}

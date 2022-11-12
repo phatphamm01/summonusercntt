@@ -1,0 +1,14 @@
+{
+  "singleQuote": true,
+  "printWidth": 80,
+  "importOrder": [
+    "^[./]",
+    "~/common|~/utils",
+    "~/designs|~/components|~/containers",
+    "~/hooks|~/store",
+    "~/module|~/types",
+    "~/services"
+  ],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true
+}

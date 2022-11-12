@@ -1,10 +1,10 @@
-import ProductCard from "@components/ProductCard";
-import { FC, useCallback } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import { useAppSelector } from "@hooks/redux";
-import { IProduct } from "@redux/types/product";
-import { IWish } from "@redux/types/user";
+import { FC, useCallback } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import ProductCard from '~/components/ProductCard';
+import { IProduct } from '~/store/product/types';
+import { userStore } from '~/store/user';
+import { IWish } from '~/store/user/types';
 
 const CategoryProductContainer = styled.div`
   ${tw``}
@@ -29,7 +29,7 @@ interface ICategoryProduct {
 }
 
 const CategoryProduct: FC<ICategoryProduct> = ({ products, gapX }) => {
-  const { wishlist } = useAppSelector((state) => state.userReducers);
+  const wishlist = userStore((s) => s.wishlist);
 
   const handleCheckIsLike = useCallback(
     (id: string) => {

@@ -1,6 +1,6 @@
-import { FC, ReactChild } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { FC, ReactChild } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
 const ButtonContainer = styled.button<{
   variant: IVariant;
@@ -9,11 +9,11 @@ const ButtonContainer = styled.button<{
   ${tw`block w-full h-20 text-center rounded text-white font-bold text-lg flex-grow`}
   ${({ variant }) => {
     switch (variant) {
-      case "text":
+      case 'text':
         return tw``;
-      case "container":
+      case 'container':
         return tw`text-blue-50 bg-green-500 hover:bg-green-600`;
-      case "outlined":
+      case 'outlined':
         return tw`border border-gray-700 text-black-lv1 font-semibold hover:text-white hover:bg-gray-700 `;
     }
   }}
@@ -23,14 +23,14 @@ const ButtonContainer = styled.button<{
   }
 `;
 
-type IVariant = "text" | "container" | "outlined";
+type IVariant = 'text' | 'container' | 'outlined';
 interface IButton {
   children?: ReactChild;
   variant: IVariant;
   rounded?: boolean;
   onClick?: () => void;
   style?: React.CSSProperties;
-  type?: "submit" | "reset" | "button" | undefined;
+  type?: 'submit' | 'reset' | 'button' | undefined;
   disabled?: boolean;
   className?: string;
   hoverColor?: string;

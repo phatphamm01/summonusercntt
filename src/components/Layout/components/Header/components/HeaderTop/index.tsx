@@ -1,14 +1,13 @@
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { FC } from "react";
-import styled, { keyframes } from "styled-components";
-import tw from "twin.macro";
-import IconLeft from "./components/IconLeft";
-import IconRight from "./components/IconRight";
-import Logo from "../Logo";
-import isNullObject from "@common/function/isNullObject";
-import { setOverflowMenu, setOverflowUser } from "@redux/slices/ui";
-import HoverDropdown from "./components/HoverDropdown";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
+import { FC } from 'react';
+import styled, { keyframes } from 'styled-components';
+import tw from 'twin.macro';
+import Logo from '../Logo';
+import IconLeft from './components/IconLeft';
+import IconRight from './components/IconRight';
+import isNullObject from '~/common/function/isNullObject';
+import { uiStore } from '~/store/ui';
+import { userStore } from '~/store/user';
 
 const HeaderTopContainer = styled.div`
   ${tw`md:pt-8 pt-14 text-2xl`}
@@ -57,7 +56,7 @@ const UserIcon = styled.div`
 `;
 
 const UserDropdownItem = styled.p`
-  ${tw`text-sm line-height[1] hover:bg-gray-100 pl-8 pr-12 py-4`}
+  ${tw`text-sm [line-height:1] hover:bg-gray-100 pl-8 pr-12 py-4`}
 `;
 
 interface IHeaderTop {
@@ -66,25 +65,26 @@ interface IHeaderTop {
 
 const HeaderTop: FC<IHeaderTop> = ({ handleClickSearch }) => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { user, wishlist, cart } = useAppSelector(
-    (state) => state.userReducers
-  );
 
-  const { overflowMenu, overflowUser } = useAppSelector(
-    (state) => state.uiReducers
-  );
+  const [user, wishlist, cart] = userStore((s) => [s.user, s.wishlist, s.cart]);
+
+  const [overflowMenu, overflowUser] = uiStore((s) => [
+    s.overflowMenu,
+    s.overflowUser,
+  ]);
 
   const handleClickMenuMobile = () => {
-    dispatch(setOverflowMenu(!overflowMenu));
+    uiStore.getState().setOverflowMenu(!overflowMenu);
   };
 
   const handleOpenLogin = () => {
     if (!isNullObject(user)) {
-      router.push("/account");
+      router.push('/account');
       return;
     }
-    dispatch(setOverflowUser(!overflowUser));
+    console.log(overflowUser);
+
+    uiStore.getState().setOverflowUser(!overflowUser);
   };
 
   const handleLogout = () => {
@@ -100,7 +100,7 @@ const HeaderTop: FC<IHeaderTop> = ({ handleClickSearch }) => {
           <UserIcon>
             <IconLeft
               onClick={handleOpenLogin}
-              title={isNullObject(user) ? "Sign In" : "My Account"}
+              title={isNullObject(user) ? 'Sign In' : 'My Account'}
               icon="/icon.svg#svgs-account"
             />
             {!isNullObject(user) && (
@@ -114,7 +114,7 @@ const HeaderTop: FC<IHeaderTop> = ({ handleClickSearch }) => {
           </UserIcon>
           <HumburgerIcon>
             <IconLeft
-              style={{ pointerEvents: overflowMenu ? "none" : "auto" }}
+              style={{ pointerEvents: overflowMenu ? 'none' : 'auto' }}
               onClick={() => handleClickMenuMobile()}
               href="/login"
               icon="/icon.svg#svgs-burger"

@@ -1,6 +1,6 @@
-import IconSVG from "@designs/IconSVG";
-import { FC } from "react";
-import styled from "styled-components";
+import { FC } from 'react';
+import styled from 'styled-components';
+import IconSVG from '~/designs/IconSVG';
 
 interface IFooter {}
 
@@ -192,7 +192,7 @@ const Footer: FC<IFooter> = () => {
                     <div className="input-col">
                       <label className="input-box">
                         <span className="label">
-                          Sign up to our newsletter{" "}
+                          Sign up to our newsletter{' '}
                         </span>
                         <input
                           type="email"
@@ -394,7 +394,7 @@ const Footer: FC<IFooter> = () => {
                       <use xlinkHref="/icon.svg#svgs-android"></use>
                     </svg>
                     <span>
-                      GET IT ON<span> Google Play</span>{" "}
+                      GET IT ON<span> Google Play</span>{' '}
                     </span>
                   </a>
                 </div>

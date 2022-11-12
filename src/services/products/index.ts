@@ -1,8 +1,8 @@
-import AxiosService from "@common/utils/axios";
+import AxiosService from '~/common/utils/axios';
 
 const url = {
   getProductByType: ({ params, id }: any) =>
-    `categories/${id}/products/${params !== undefined ? "?" + params : ""}`,
+    `categories/${id}/products/${params !== undefined ? '?' + params : ''}`,
   searchProduct: ({ key }: any) => `products/search?key=${key}`,
   getAllProduct: () => `products`,
   getProductDetail: ({ id }: any) => `products/${id}`,

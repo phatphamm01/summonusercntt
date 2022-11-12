@@ -1,14 +1,14 @@
-import Link from "@designs/Link";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import useToggleAndCloseVer2 from "@hooks/useToggleAndCloseVer2";
-import useWindowSize, { ISize } from "@hooks/useWindowSize";
-import { setOverflowMenu } from "@redux/slices/ui";
-import { ICategory } from "@redux/types/common";
-import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import NavDetailMobileExtra from "./components/NavDetailMobileExtra";
-import NavDetailMobileItem from "./components/NavDetailMobileItem";
+import { FC, memo, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import NavDetailMobileExtra from './components/NavDetailMobileExtra';
+import NavDetailMobileItem from './components/NavDetailMobileItem';
+import Link from '~/designs/Link';
+import useToggleAndCloseVer2 from '~/hooks/useToggleAndCloseVer2';
+import useWindowSize, { ISize } from '~/hooks/useWindowSize';
+import { commonStore } from '~/store/common';
+import { ICategory } from '~/store/common/types';
+import { uiStore } from '~/store/ui';
 
 const NavDetailMobileContainer = styled.div<{ isActive: boolean }>`
   ${tw`bg-white fixed overflow-hidden z-50`}
@@ -17,7 +17,7 @@ const NavDetailMobileContainer = styled.div<{ isActive: boolean }>`
 
   transition: transform 300ms ease-in;
   transform: ${({ isActive }) =>
-    isActive ? "translateX(0)" : "translateX(-286px)"};
+    isActive ? 'translateX(0)' : 'translateX(-286px)'};
 `;
 
 const NavDetailWrraper = styled.div`
@@ -61,9 +61,8 @@ const NavDetailMobileMoney = styled.div`
 interface INavDetailMobile {}
 
 const NavDetailMobile: FC<INavDetailMobile> = () => {
-  const dispatch = useAppDispatch();
-  const { overflowMenu } = useAppSelector((state) => state.uiReducers);
-  const { categories } = useAppSelector((state) => state.commonReducers);
+  const overflowMenu = uiStore((s) => s.overflowMenu);
+  const categories = commonStore((s) => s.categories);
 
   const windowSize: ISize = useWindowSize();
   const [stateExtra, setStateExtra] = useState<boolean>(false);
@@ -74,13 +73,13 @@ const NavDetailMobile: FC<INavDetailMobile> = () => {
 
   useEffect(() => {
     if (isOpen) return;
-    dispatch(setOverflowMenu(false));
+    uiStore.getState().setOverflowMenu(false);
   }, [isOpen]);
 
   useEffect(() => {
     if (!overflowMenu) return;
     setIsOpen(true);
-  }, [overflowMenu]);
+  }, [overflowMenu, setIsOpen]);
 
   useEffect(() => {
     if (!overflowMenu) return;
@@ -89,7 +88,7 @@ const NavDetailMobile: FC<INavDetailMobile> = () => {
         setIsOpen(false);
       }
     }
-  }, [windowSize]);
+  }, [overflowMenu, setIsOpen, windowSize]);
 
   const handelExtra = (state: boolean, data?: Array<ICategory>) => {
     setStateExtra(state);

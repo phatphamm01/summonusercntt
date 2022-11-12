@@ -1,10 +1,10 @@
-import Select from "@designs/Select";
-import { IItemSelect } from "@interfaces/UI/IItemSelect";
-import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import Skeleton from "react-loading-skeleton";
+import { useRouter } from 'next/router';
+import { FC, useCallback, useEffect, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import Select from '~/designs/Select';
+import { IItemSelect } from '~/types/UI/IItemSelect';
 
 const ToolbarContainer = styled.div`
   ${tw`grid grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:gap-0`}
@@ -27,19 +27,19 @@ interface IToolbar {
 
 const dataFilter: Array<IItemSelect> = [
   {
-    id: "newest-arrivals",
-    name: "Newest Arrivals",
-    query: "sort=createat",
+    id: 'newest-arrivals',
+    name: 'Newest Arrivals',
+    query: 'sort=createat',
   },
   {
-    id: "price-high-low",
-    name: "Price High Low",
-    query: "sort=-price",
+    id: 'price-high-low',
+    name: 'Price High Low',
+    query: 'sort=-price',
   },
   {
-    id: "price-low-high",
-    name: "Price Low High",
-    query: "sort=price",
+    id: 'price-low-high',
+    name: 'Price Low High',
+    query: 'sort=price',
   },
 ];
 
@@ -48,23 +48,26 @@ const Toolbar: FC<IToolbar> = ({ gap, count }) => {
   const [dataSelect, setDataSelect] = useState<Array<IItemSelect>>(dataFilter);
   const { asPath } = router;
 
-  useEffect(() => {
-    handleDataSelect();
-  }, []);
+  const handleQueryString = useCallback(
+    (query: string) => {
+      if (asPath.indexOf('?') === -1) return '?' + query;
+      return '&' + query;
+    },
+    [asPath]
+  );
 
-  const handleQueryString = (query: string) => {
-    if (asPath.indexOf("?") === -1) return "?" + query;
-    return "&" + query;
-  };
-
-  const handleDataSelect = () => {
+  const handleDataSelect = useCallback(() => {
     setDataSelect(
       [...dataSelect]?.map((value) => ({
         ...value,
         query: handleQueryString(value?.query),
       }))
     );
-  };
+  }, [dataSelect, handleQueryString]);
+
+  useEffect(() => {
+    handleDataSelect();
+  }, [handleDataSelect]);
 
   return (
     <ToolbarContainer className={`gap-${gap}`}>

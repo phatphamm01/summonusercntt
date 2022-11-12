@@ -1,7 +1,7 @@
-import { useAppSelector } from "@hooks/redux";
-import { FC } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import { uiStore } from '~/store/ui';
 
 const BreadcrumbContainer = styled.div`
   ${tw`text-sm pt-2 pb-6`}
@@ -10,7 +10,7 @@ const Item = styled.span`
   ${tw`pr-6 relative text-gray-500`}
 
   &:not(:last-child):before {
-    content: "";
+    content: '';
     position: absolute;
 
     top: 50%;
@@ -27,7 +27,7 @@ const Item = styled.span`
 interface IBreadcrumb {}
 
 const Breadcrumb: FC<IBreadcrumb> = () => {
-  const { breadcrumb } = useAppSelector((state) => state.uiReducers);
+  const breadcrumb = uiStore((s) => s.breadcrumb);
   return (
     <BreadcrumbContainer>
       {breadcrumb?.map((value, index) => (

@@ -1,13 +1,13 @@
-import AxiosService from "@common/utils/axios";
+import AxiosService from '~/common/utils/axios';
 
 const url = {
-  signup: "user/signup",
-  login: "user/login",
-  me: "user/me",
-  verify: "user/verify",
-  forgotPassword: "user/forgot-password",
-  changePassword: "user/update-password",
-  resetPassword: "user/reset-password",
+  signup: 'user/signup',
+  login: 'user/login',
+  me: 'user/me',
+  verify: 'user/verify',
+  forgotPassword: 'user/forgot-password',
+  changePassword: 'user/update-password',
+  resetPassword: 'user/reset-password',
 };
 
 const fetchAuth = {

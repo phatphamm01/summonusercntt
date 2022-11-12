@@ -1,6 +1,6 @@
-import { FC } from "react";
-import { ToastContainer } from "react-toastify";
-import tw from "twin.macro";
+import { FC } from 'react';
+import { ToastContainer } from 'react-toastify';
+import tw from 'twin.macro';
 
 interface IToastify {}
 

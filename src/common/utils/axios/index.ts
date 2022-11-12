@@ -1,20 +1,20 @@
-import { IDataAxios, IResponseAxios } from "./interface";
-import handleError from "@common/utils/axios/handleError";
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import { IDataAxios, IResponseAxios } from './interface';
+import handleError from '~/common/utils/axios/handleError';
 
 export type Method =
-  | "get"
-  | "delete"
-  | "head"
-  | "options"
-  | "post"
-  | "put"
-  | "patch"
-  | "purge"
-  | "link"
-  | "unlink";
+  | 'get'
+  | 'delete'
+  | 'head'
+  | 'options'
+  | 'post'
+  | 'put'
+  | 'patch'
+  | 'purge'
+  | 'link'
+  | 'unlink';
 
-axios.defaults.baseURL = "https://shopme-three.vercel.app/api/v1/";
+axios.defaults.baseURL = 'https://shopme-three.vercel.app/api/v1/';
 
 class AxiosService {
   #instance: AxiosInstance;
@@ -22,21 +22,17 @@ class AxiosService {
     const instance = axios.create({
       timeout: 20000,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
     instance.interceptors.request.use(async (config) => {
-      const ISSERVER = typeof window === "undefined";
-      let token: string = "";
-      if (!ISSERVER) {
-        token = localStorage.getItem("token") || "";
-      }
+      let token = localStorage.getItem('token') || '';
 
       return {
         ...config,
         headers: {
-          Authorization: token ? `Bearer ${token}` : "",
+          Authorization: token ? `Bearer ${token}` : '',
         },
       };
     });

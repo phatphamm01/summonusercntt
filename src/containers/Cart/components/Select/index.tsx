@@ -1,10 +1,10 @@
-import { useAppDispatch } from "@hooks/redux";
-import useToggleAndCloseVer2 from "@hooks/useToggleAndCloseVer2";
-import { updateCart } from "@redux/slices/user";
-import { ICart } from "@redux/types/user";
-import { FC, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import useToggleAndCloseVer2 from '~/hooks/useToggleAndCloseVer2';
+import { userStore } from '~/store/user';
+import { ICart } from '~/store/user/types';
+import fetchCart from '~/services/cart';
 
 const SelectContainer = styled.div`
   ${tw`w-[42px]`}
@@ -45,19 +45,21 @@ interface ISelect {
 }
 
 const Select: FC<ISelect> = ({ data }) => {
-  const dispatch = useAppDispatch();
   const ref = useRef<HTMLUListElement>(null);
   const [isOpen, setIsOpen] = useToggleAndCloseVer2(ref);
   const [selected, setSelected] = useState<{ id: number; value: number }>();
 
   useEffect(() => {
     setSelected({ id: data.quantity, value: data.quantity });
-  }, []);
+  }, [data.quantity]);
 
-  const handleUpdateApi = (value: number) => {
-    dispatch(
-      updateCart({ productVariation: data.variants._id!, quantity: value })
-    );
+  const handleUpdateApi = async (value: number) => {
+    const card = await fetchCart.updateQuantity({
+      productVariation: data.variants._id!,
+      quantity: value,
+    });
+
+    userStore.getState().setCart(card);
   };
 
   const handleSelect = (value: { id: number; value: number }) => {

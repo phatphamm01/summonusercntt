@@ -1,8 +1,8 @@
-import Link from "@designs/Link";
-import { IDropdown } from "@redux/types/ui";
-import { FC } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import Link from '~/designs/Link';
+import { IDropdown } from '~/store/ui/types';
 
 const ItemContainer = styled.div`
   ${tw`w-full text-black-lv2 py-2`}

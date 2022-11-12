@@ -1,16 +1,13 @@
-import { FC, useEffect } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import Layout from "@components/Layout";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { useRouter } from "next/router";
-import isNullObject from "@common/function/isNullObject";
-import IconSVG from "@designs/IconSVG";
-import PasswordForm from "./components/PasswordForm";
-
-import { Router } from "next/router";
-import { getBill } from "@redux/slices/user";
-import TableBill from "./components/TabelBill";
+import { useRouter } from 'next/router';
+import { FC, useEffect } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import PasswordForm from './components/PasswordForm';
+import TableBill from './components/TabelBill';
+import isNullObject from '~/common/function/isNullObject';
+import Layout from '~/components/Layout';
+import IconSVG from '~/designs/IconSVG';
+import { userStore } from '~/store/user';
 
 const AccountContainer = styled.div`
   ${tw`max-w-[1008px] mx-auto mt-20 `}
@@ -18,7 +15,7 @@ const AccountContainer = styled.div`
 const AccountBox = styled.div`
   ${tw`relative border border-gray-400 `}
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     background-color: #ebebeb;
     width: 100%;
@@ -45,7 +42,7 @@ const Logout = styled.div`
   ${tw`float-right`}
 `;
 const Name = styled.span`
-  ${tw`block text-3xl font-bold line-height[1] pb-4`}
+  ${tw`block text-3xl font-bold [line-height:1] pb-4`}
 `;
 const Mail = styled.span`
   ${tw`text-xl font-normal`}
@@ -74,13 +71,13 @@ interface IAccount {}
 
 const Account: FC<IAccount> = () => {
   const router = useRouter();
-  const { user } = useAppSelector((state) => state.userReducers);
+  const user = userStore((s) => s.user);
 
   useEffect(() => {
     if (isNullObject(user)) {
-      router.push("/");
+      router.push('/');
     }
-  }, []);
+  }, [router, user]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -103,12 +100,12 @@ const Account: FC<IAccount> = () => {
             <AccountRight>
               <AccountContent>
                 <Info>
-                  <Name>{user.fname + " " + user.lname}</Name>
+                  <Name>{user.fname + ' ' + user.lname}</Name>
                   <Mail>{user.email}</Mail>
                 </Info>
                 <Logout onClick={() => handleLogout()}>
                   <IconSVG
-                    style={{ height: "40px", width: "40px" }}
+                    style={{ height: '40px', width: '40px' }}
                     iconHref="/icon.svg#svgs-logout"
                   />
                 </Logout>

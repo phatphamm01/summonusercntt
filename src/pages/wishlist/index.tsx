@@ -1,13 +1,30 @@
-import type { NextPage } from "next";
-import { Fragment } from "react";
-import { END } from "redux-saga";
+import { Fragment } from 'react';
+import Wishlist from '~/containers/Wishlist';
+import MetaTitle from '~/designs/MetaTitle';
+import { useUpdateStore } from '~/hooks/useUpdateStore';
+import { commonStore } from '~/store/common';
+import { StoreName } from '~/store/type';
+import { GetStaticProps, NextPageProps } from '~/types/nextjs';
+import fetchCommon from '~/services/common';
 
-import Wishlist from "@containers/Wishlist";
-import MetaTitle from "@designs/MetaTitle";
-import { wrapper } from "@redux/store";
-import { getCategories } from "@redux/slices/common";
+export const getStaticProps: GetStaticProps = async () => {
+  const categories = fetchCommon.getCategories();
 
-const WishlistPage: NextPage = (props) => {
+  commonStore.getState().setCategories((await categories).data as any);
+  return {
+    props: {
+      data: [
+        {
+          type: StoreName.COMMON,
+          data: { categories: commonStore.getState().categories },
+        },
+      ],
+    },
+  };
+};
+
+const WishlistPage: NextPageProps<typeof getStaticProps> = ({ data }) => {
+  useUpdateStore(data);
   return (
     <Fragment>
       <MetaTitle title="Wishlist" />
@@ -17,15 +34,3 @@ const WishlistPage: NextPage = (props) => {
 };
 
 export default WishlistPage;
-
-export const getStaticProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const { dispatch, sagaTask } = store;
-
-    dispatch(getCategories());
-
-    dispatch(END);
-    await sagaTask.toPromise();
-    return { props: {} };
-  }
-);
