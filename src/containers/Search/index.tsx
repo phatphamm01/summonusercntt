@@ -1,13 +1,13 @@
-import Layout from "@components/Layout";
+import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { searchProduct } from "@redux/slices/product";
+import CategoryProduct from './components/CategoryProducts';
 
-import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import CategoryProduct from "./components/CategoryProducts";
+import Layout from '~/components/Layout';
+
+import { storeSelector } from '~/store/index';
 
 const ProductContainer = styled.div<{ isActive: boolean }>`
   ${tw`container lg:max-w-full mx-auto xl:px-4 lg:mt-10 px-20 `}
@@ -30,12 +30,9 @@ interface IProduct {}
 const GAPCOMMON = 20;
 
 const Product: FC<IProduct> = () => {
-  const dispatch = useAppDispatch();
   const { query } = useRouter();
   const [isActive, setActive] = useState<boolean>(false);
-  const { searchProduct: data } = useAppSelector(
-    (state) => state.productReducers
-  );
+  const data = storeSelector((state) => state.searchProduct);
 
   let { key } = query;
 
@@ -48,9 +45,9 @@ const Product: FC<IProduct> = () => {
   const handleData = () => {
     if (!key) return;
 
-    let _key = "";
+    let _key = '';
 
-    if (typeof key === "string") {
+    if (typeof key === 'string') {
       _key = key;
       getDataApi(_key);
       return;
@@ -59,13 +56,13 @@ const Product: FC<IProduct> = () => {
   };
 
   const getDataApi = (key: string) => {
-    dispatch(searchProduct({ key: key }));
+    storeSelector.getState().getSearchProductApi?.({ key: key });
   };
 
   return (
     <Layout>
       <ProductContainer isActive={isActive}>
-        <Title>Search results found for "{key}"</Title>
+        <Title>Search results found for {`"${key}"`}</Title>
         <ProductMain>
           <CategoryProductContainer>
             <CategoryProduct gapX={GAPCOMMON} products={data} />

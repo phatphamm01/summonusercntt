@@ -1,13 +1,14 @@
-import Button from "@designs/Button";
-import IconSVG from "@designs/IconSVG";
-import SelectVariant from "@designs/SelectVariant";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { addWishlist, deleteCart } from "@redux/slices/user";
-import { ICart, IWish } from "@redux/types/user";
-import { FC, useCallback, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
-import Select from "../Select";
+import { FC, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
+
+import Select from '../Select';
+
+import Button from '~/designs/Button';
+import IconSVG from '~/designs/IconSVG';
+
+import { storeSelector } from '~/store/index';
+import { ICart, IWish } from '~/store/user/types';
 
 const ItemContainer = styled.div`
   ${tw`py-8`}
@@ -78,13 +79,11 @@ interface IItem {
 }
 
 const Item: FC<IItem> = ({ data }) => {
-  const dispatch = useAppDispatch();
   const [isLike, setIsLike] = useState<boolean>(false);
-  const { wishlist } = useAppSelector((state) => state.userReducers);
+  const wishlist = storeSelector((state) => state.wishlist);
 
   useEffect(() => {
     let checkIsLike = handleCheckIsLike(data?.idProduct!);
-    console.log(checkIsLike);
 
     setIsLike(checkIsLike);
   }, [wishlist]);
@@ -99,7 +98,8 @@ const Item: FC<IItem> = ({ data }) => {
     let payload = {
       product: data.idProduct!,
     };
-    dispatch(addWishlist(payload));
+
+    storeSelector.getState().addWishlistApi?.(payload);
   };
 
   const handleDelete = () => {
@@ -107,7 +107,7 @@ const Item: FC<IItem> = ({ data }) => {
   };
 
   const callDeleteApi = (id: string) => {
-    dispatch(deleteCart({ id: id }));
+    storeSelector.getState().deleteCartApi?.({ id: id });
   };
 
   const handleCheckIsLike = (id: string) => {
@@ -128,8 +128,8 @@ const Item: FC<IItem> = ({ data }) => {
         <ItemMain>
           <Design>{data.name}</Design>
           <IdProdcut>
-            Product number:{" "}
-            {data.variants.sizeId ? data.variants.sizeId : "Default"}
+            Product number:{' '}
+            {data.variants.sizeId ? data.variants.sizeId : 'Default'}
           </IdProdcut>
           <Name>{data.name}</Name>
           <InfoBox>
@@ -148,7 +148,7 @@ const Item: FC<IItem> = ({ data }) => {
                 <HeartBox isCheck={isLike}>
                   <IconSVG iconHref="/icon.svg#svgs-wishlist" />
                 </HeartBox>
-                <ButtonText>{isLike ? "Remove" : "Add"} Wishlist</ButtonText>
+                <ButtonText>{isLike ? 'Remove' : 'Add'} Wishlist</ButtonText>
               </ButtonContent>
             </ButtonWrraper>
           </ControlBox>

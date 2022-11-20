@@ -1,9 +1,12 @@
-import { FC } from "react";
-import styled, { keyframes } from "styled-components";
-import tw from "twin.macro";
-import NavDetailMobileItem from "../NavDetailMobileItem";
-import Link from "@designs/Link";
-import { ICategory } from "@redux/types/common";
+import { FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import NavDetailMobileItem from '../NavDetailMobileItem';
+
+import Link from '~/designs/Link';
+
+import { ICategory } from '~/store/common/types';
 
 const NavDetailMobileExtraContainer = styled.div<{ stateExtra: boolean }>`
   width: var(--width-nav-mobile);
@@ -48,7 +51,7 @@ const BackToMenu = styled.div`
   ${tw`pl-14 border-b border-t py-6 relative text-lg font-medium text-gray-700`}
 
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     height: 10px;
     aspect-ratio: 1 / 1;

@@ -1,9 +1,10 @@
-import { FC, useState } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import Main from "./Main";
-import Verify from "./Verify";
-import React from "react";
+import { FC, useState } from 'react';
+import React from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import Main from './Main';
+import Verify from './Verify';
 
 const ForgotPasswordContainer = styled.div`
   ${tw``}
@@ -12,7 +13,7 @@ const ForgotPasswordContainer = styled.div`
 interface IForgotPassword {}
 
 const Email = (() => {
-  let email: string = "";
+  let email: string = '';
   const getEmail = () => {
     return email;
   };

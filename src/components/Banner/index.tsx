@@ -1,6 +1,7 @@
-import H1 from "@designs/H1";
-import { FC } from "react";
-import tw from "twin.macro";
+import { FC } from 'react';
+import tw from 'twin.macro';
+
+import H1 from '~/designs/H1';
 
 const BannerTitle = tw.h2`mb-3`;
 

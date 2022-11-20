@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import InnerImageZoom from "react-inner-image-zoom";
+import { FC, useEffect, useState } from 'react';
+import InnerImageZoom from 'react-inner-image-zoom';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
 const ImageContainer = styled.div`
   ${tw`sm:gap-10 lg:gap-20 xl:gap-2 gap-10 flex items-center`}
@@ -33,23 +33,29 @@ interface IImage {
   name?: string;
 }
 
-const Image: FC<IImage> = ({ images, imageCover, name = "" }) => {
+const Image: FC<IImage> = ({ images, imageCover, name = '' }) => {
   const [arrImages, setArrImages] = useState<
     Array<{ id: number; urlSmall: string; urlBig: string }>
   >([]);
 
-  const [selected, setSelected] =
-    useState<{ id: number; urlSmall: string; urlBig: string }>();
+  const [selected, setSelected] = useState<{
+    id: number;
+    urlSmall: string;
+    urlBig: string;
+  }>();
 
   useEffect(() => {
+    if (!Array.isArray(images)) return;
+
     let imagesNew = images?.map((value, index) => ({
       id: index,
       urlSmall: imageCover[index] ? imageCover[index] : value,
       urlBig: value ? value : imageCover[index],
     }));
+
     setSelected(imagesNew[0]);
     setArrImages(imagesNew);
-  }, []);
+  }, [images]);
 
   const handeleSelect = (value: {
     id: number;
@@ -78,7 +84,7 @@ const Image: FC<IImage> = ({ images, imageCover, name = "" }) => {
       <ImageMainBox>
         <InnerImageZoom
           className="shadow"
-          src={selected?.urlSmall || ""}
+          src={selected?.urlSmall || ''}
           zoomSrc={selected?.urlBig}
           alt={name}
         />

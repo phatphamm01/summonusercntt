@@ -1,15 +1,15 @@
 @tailwind "tailwindcss/base";
 @tailwind "tailwindcss/components";
-@import "./root.scss";
+@import './root.scss';
 @tailwind "tailwindcss/utilities";
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap');
 @font-face {
   font-family: Childrensalon-Icons;
   src: url(https://cdn.childrensalon.com/build/website/fonts/font/Childrensalon-Icons_v1611129127.540c1bbe.woff2)
-      format("woff2"),
+      format('woff2'),
     url(https://cdn.childrensalon.com/build/website/fonts/font/Childrensalon-Icons_v1611129127.09606815.woff)
-      format("woff");
+      format('woff');
 }
 
 * {
@@ -134,7 +134,7 @@ textarea {
 }
 
 .opened-menu::after {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   left: 0;

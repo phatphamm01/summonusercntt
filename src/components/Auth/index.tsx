@@ -1,13 +1,13 @@
-import { FC, useContext, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import Login from "./Login";
-import Signup from "./Signup";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import useToggleAndCloseVer2 from "@hooks/useToggleAndCloseVer2";
-import { setOverflowUser } from "@redux/slices/ui";
-import React from "react";
-import ForgotPassword from "./ForgotPassword";
+import React, { FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import ForgotPassword from './ForgotPassword';
+import Login from './Login';
+import Signup from './Signup';
+
+import useToggleAndCloseVer2 from '~/hooks/useToggleAndCloseVer2';
+import { storeSelector } from '~/store';
 
 const AuthContainer = styled.div<{ isActive: boolean }>`
   ${tw`fixed z-[1000] w-full min-h-[100vh] flex items-center justify-center`}
@@ -37,7 +37,7 @@ const Form = styled.form`
 
 interface IAuth {}
 
-type IStateForm = "LOGIN" | "FORGOT_PASSWORD" | "SIGNUP";
+type IStateForm = 'LOGIN' | 'FORGOT_PASSWORD' | 'SIGNUP';
 interface IAuthContext {
   setTitle?: React.Dispatch<React.SetStateAction<string>>;
   setStateForm?: React.Dispatch<React.SetStateAction<IStateForm>>;
@@ -46,22 +46,21 @@ interface IAuthContext {
 export const AuthContext = React.createContext<IAuthContext>({});
 
 const Auth: FC<IAuth> = () => {
-  const dispatch = useAppDispatch();
-  const { overflowUser } = useAppSelector((state) => state.uiReducers);
+  const overflowUser = storeSelector((state) => state.overflowUser);
 
   const ref = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useToggleAndCloseVer2(ref);
 
-  const [title, setTitle] = useState("");
-  const [stateForm, setStateForm] = useState<IStateForm>("LOGIN");
+  const [title, setTitle] = useState('');
+  const [stateForm, setStateForm] = useState<IStateForm>('LOGIN');
 
   useEffect(() => {
-    setStateForm("LOGIN");
+    setStateForm('LOGIN');
   }, [overflowUser]);
 
   useEffect(() => {
     if (isActive === false) {
-      dispatch(setOverflowUser(false));
+      storeSelector.getState().setOverflowUser(false);
     }
   }, [isActive]);
 
@@ -77,11 +76,11 @@ const Auth: FC<IAuth> = () => {
 
   const handleForm = (action: IStateForm) => {
     switch (action) {
-      case "LOGIN":
+      case 'LOGIN':
         return <Login />;
-      case "SIGNUP":
+      case 'SIGNUP':
         return <Signup />;
-      case "FORGOT_PASSWORD":
+      case 'FORGOT_PASSWORD':
         return <ForgotPassword />;
     }
   };

@@ -1,42 +1,39 @@
-import { Fragment } from "react";
-import type { GetStaticProps, NextPage } from "next";
+import { Fragment } from 'react';
 
-import MetaTitle from "@designs/MetaTitle";
+import Search from '~/containers/Search';
+import MetaTitle from '~/designs/MetaTitle';
 
-import Search from "@containers/Search";
-import { wrapper } from "@redux/store";
-import { getCategories } from "@redux/slices/common";
-import { END } from "redux-saga";
-import { searchProduct } from "@redux/slices/product";
-import { useRouter } from "next/router";
+import { useUpdateStore } from '~/hooks/useUpdateStore';
+import { storeSelector } from '~/store';
+
+import { GetStaticProps, NextPageProps } from '~/types/nextjs';
+
+export const getStaticProps: GetStaticProps = async () => {
+  await storeSelector.getState().getCategoriesApi();
+
+  return {
+    props: {
+      data: { categories: storeSelector.getState().categories },
+    },
+    revalidate: 60 * 60 * 24,
+  };
+};
 
 interface IProductPage {
   name?: string;
 }
 
-const ProductPage: NextPage<IProductPage> = ({ name }) => {
+const ProductPage: NextPageProps<IProductPage & typeof getStaticProps> = ({
+  name,
+  data,
+}) => {
+  useUpdateStore(data);
   return (
     <Fragment>
-      <MetaTitle title={"Product"} />
+      <MetaTitle title={'Product'} />
       <Search />
     </Fragment>
   );
 };
 
 export default ProductPage;
-
-export const getStaticProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const { dispatch, sagaTask } = store;
-
-    dispatch(getCategories());
-
-    dispatch(END);
-    await sagaTask.toPromise();
-
-    return {
-      props: {},
-      revalidate: 60 * 60 * 24,
-    };
-  }
-);

@@ -1,15 +1,17 @@
-import Layout from "@components/Layout";
-import Button from "@designs/Button";
-import IconSVG from "@designs/IconSVG";
-import SelectVariant from "@designs/SelectVariant";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { addCart, addWishlist } from "@redux/slices/user";
-import { IVariant } from "@redux/types/product";
-import { IWish } from "@redux/types/user";
-import { FC, useCallback, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
-import Image from "./components/Image";
+import { FC, useCallback, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
+
+import Image from './components/Image';
+
+import Layout from '~/components/Layout';
+import Button from '~/designs/Button';
+import IconSVG from '~/designs/IconSVG';
+import SelectVariant from '~/designs/SelectVariant';
+
+import { storeSelector } from '~/store';
+import { IVariant } from '~/store/product/types';
+import { IWish } from '~/store/user/types';
 
 const ProductDetailContainer = styled.div`
   ${tw`container lg:max-w-full mx-auto xl:px-4  mt-40 px-40`}
@@ -88,19 +90,19 @@ const HeartBox = styled.div<{ isCheck?: boolean }>`
 interface IProductDetail {}
 
 const ProductDetail: FC<IProductDetail> = () => {
-  const dispatch = useAppDispatch();
-  const { productDetail } = useAppSelector((state) => state.productReducers);
-  const { wishlist } = useAppSelector((state) => state.userReducers);
+  const productDetail = storeSelector((state) => state.productDetail);
+  const wishlist = storeSelector((state) => state.wishlist);
 
   const [isLike, setIsLike] = useState<boolean>();
-  const [variantId, setVariantId] = useState<string>("");
+  const [variantId, setVariantId] = useState<string>('');
   const [variant, setVariant] = useState<IVariant>();
   const [funcSelect, setFuncSelect] = useState<() => void>();
 
   useEffect(() => {
+    if (!productDetail?._id) return;
     let checkIsLike = handleCheckIsLike(productDetail?._id!);
     setIsLike(checkIsLike);
-  }, []);
+  }, [productDetail?._id]);
 
   const handleAddWishlist = () => {
     setIsLike(!isLike);
@@ -112,7 +114,8 @@ const ProductDetail: FC<IProductDetail> = () => {
     let payload = {
       product: productDetail._id!,
     };
-    dispatch(addWishlist(payload));
+
+    storeSelector.getState().addWishlistApi?.(payload);
   };
 
   function handleAddCart(): void {
@@ -125,7 +128,9 @@ const ProductDetail: FC<IProductDetail> = () => {
   }
 
   const addCartApi = () => {
-    dispatch(addCart({ productVariation: variantId, quantity: 1 }));
+    storeSelector
+      .getState()
+      .addCartApi?.({ productVariation: variantId, quantity: 1 });
   };
 
   const handleCheckIsLike = useCallback(
@@ -145,11 +150,13 @@ const ProductDetail: FC<IProductDetail> = () => {
       <ProductDetailContainer>
         <ProductDetailBox>
           <ProductImageContainer>
-            <Image
-              images={productDetail?.images!}
-              imageCover={productDetail?.imageCovers!}
-              name={productDetail?.name!}
-            />
+            {productDetail && (
+              <Image
+                images={productDetail.images!}
+                imageCover={productDetail.imageCovers!}
+                name={productDetail.name}
+              />
+            )}
           </ProductImageContainer>
           <ProductInfoContainer>
             <ProductInfoTopContainer>

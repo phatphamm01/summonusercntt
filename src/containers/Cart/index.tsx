@@ -1,11 +1,15 @@
-import isNullObject from "@common/function/isNullObject";
-import Layout from "@components/Layout";
-import Paypal from "@components/PaypalButton";
-import { useAppSelector } from "@hooks/redux";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import Item from "./components/Item";
+import { FC, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import Item from './components/Item';
+
+import isNullObject from '~/common/function/isNullObject';
+
+import Layout from '~/components/Layout';
+import Paypal from '~/components/PaypalButton';
+
+import { storeSelector } from '~/store/index';
 
 const CartContainer = styled.div`
   ${tw`container mx-auto mt-20 xl:px-20 lg:px-4 2xl:px-60 px-96`}
@@ -41,7 +45,7 @@ const PaypalBox = styled.div`
 interface ICart {}
 
 const Cart: FC<ICart> = () => {
-  const { cart } = useAppSelector((state) => state.userReducers);
+  const cart = storeSelector((state) => state.cart);
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
@@ -76,7 +80,7 @@ const Cart: FC<ICart> = () => {
                 <SubtotalPrice>${total}</SubtotalPrice>
               </Subtotal>
               <PaypalBox>
-                <Paypal data={cart} price={total + ""} />
+                <Paypal data={cart} price={total + ''} />
               </PaypalBox>
             </CartControl>
           )}

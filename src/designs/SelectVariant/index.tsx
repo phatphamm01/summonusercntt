@@ -1,6 +1,3 @@
-import useToggleAndClose from "@hooks/useToggleAndClose";
-import { IVariant } from "@redux/types/product";
-import fetchProduct from "@services/products";
 import {
   Dispatch,
   FC,
@@ -8,11 +5,13 @@ import {
   useEffect,
   useRef,
   useState,
-} from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import Skeleton from "react-loading-skeleton";
-import useToggleAndCloseVer2 from "@hooks/useToggleAndCloseVer2";
+} from 'react';
+import Skeleton from 'react-loading-skeleton';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import useToggleAndCloseVer2 from '~/hooks/useToggleAndCloseVer2';
+import { IVariant } from '~/store/product/types';
 
 const SelectVariantContainer = styled.div`
   ${tw`w-full`}
@@ -105,7 +104,7 @@ interface ISelectVariant {
 
 const SelectVariant: FC<ISelectVariant> = ({
   list,
-  title = "Select Size",
+  title = 'Select Size',
   setVariantId,
   setFuncSelect,
   setVariant,
@@ -116,12 +115,16 @@ const SelectVariant: FC<ISelectVariant> = ({
   const [variantSelected, setVariantSelected] = useState<IVariant>();
 
   useEffect(() => {
+    setVariantList(list);
+  }, [list]);
+
+  useEffect(() => {
     setFuncSelect?.(() => {
       return handleClickSelect;
     });
 
     if (variantList && variantList.length === 1) {
-      setVariantSelected({ ...variantList, size: "Default" });
+      setVariantSelected({ ...variantList, size: 'Default' });
       setVariantId?.(variantList[0]._id!);
     }
   }, []);
@@ -147,7 +150,7 @@ const SelectVariant: FC<ISelectVariant> = ({
       <SelectVariantBox>
         <SelectVariantedBox onClick={() => handleClickSelect()}>
           <SelectVariantedText>
-            {variantSelected ? variantSelected.size : "Select size"}
+            {variantSelected ? variantSelected.size : 'Select size'}
           </SelectVariantedText>
           {!checkLengthOne() && <Arrow />}
         </SelectVariantedBox>

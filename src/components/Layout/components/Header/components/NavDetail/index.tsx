@@ -1,9 +1,12 @@
-import Link from "@designs/Link";
-import { ICategory } from "@redux/types/common";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import NavImage from "./components/NavImage";
+import { FC, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import NavImage from './components/NavImage';
+
+import Link from '~/designs/Link';
+
+import { ICategory } from '~/store/common/types';
 
 const CategoryContainer = styled.div`
   ${tw`w-full`}
@@ -28,7 +31,7 @@ const CategoryLeve2 = styled.div`
   ${tw`not-last:pt-20 before:bg-gray-300 relative`}
 
   &:not(:last-child):before {
-    content: "";
+    content: '';
     position: absolute;
     height: 300px;
     width: 1px;
@@ -186,7 +189,7 @@ const NavDetail: FC<INavDetail> = ({ data }) => {
                 >
                   <NavTitle>{catagoryLevel2.name}</NavTitle>
                 </Link>
-                <div style={{ display: "flex", gap: "30px" }}>
+                <div style={{ display: 'flex', gap: '30px' }}>
                   {handleChunkArray(
                     catagoryLevel2?.children,
                     LENGTH_CATEGORY

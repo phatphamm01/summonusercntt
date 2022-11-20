@@ -1,6 +1,6 @@
-import { ReactChild, useRef } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { ReactChild, useRef } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
 const InputContainer = styled.div`
   ${tw`text-gray-600`}
@@ -26,7 +26,7 @@ interface IInput {
   name: string;
   value?: string;
   title: string;
-  type: "text" | "password";
+  type: 'text' | 'password';
   placeholder?: string;
   iconLeft?: ReactChild;
   pattern?: string;
@@ -40,7 +40,7 @@ interface IInput {
 const Input = ({
   name,
   title,
-  type = "text",
+  type = 'text',
   placeholder,
   value,
   onChange,
@@ -70,7 +70,7 @@ const Input = ({
         <InputLeft>{iconLeft}</InputLeft>
       </InputBox>
       {disableMessage && (
-        <ErrorMessage>{errors && touched ? errors : ""}</ErrorMessage>
+        <ErrorMessage>{errors && touched ? errors : ''}</ErrorMessage>
       )}
     </InputContainer>
   );

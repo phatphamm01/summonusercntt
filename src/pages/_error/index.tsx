@@ -1,11 +1,12 @@
-import type { NextPage } from "next";
-import { Fragment } from "react";
-import { END } from "redux-saga";
+import type { NextPage } from 'next';
+import { Fragment } from 'react';
 
-import Error from "@containers/Error";
-import MetaTitle from "@designs/MetaTitle";
-import { wrapper } from "@redux/store";
-import { getCategories } from "@redux/slices/common";
+import Error from '~/containers/Error';
+import MetaTitle from '~/designs/MetaTitle';
+
+import { storeSelector } from '~/store';
+
+import fetchCommon from '~/services/common';
 
 const ErrorPage: NextPage = (props) => {
   return (
@@ -18,14 +19,9 @@ const ErrorPage: NextPage = (props) => {
 
 export default ErrorPage;
 
-export const getStaticProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const { dispatch, sagaTask } = store;
+export async function getStaticProps() {
+  const [categories] = await Promise.all([fetchCommon.getCategories()]);
 
-    dispatch(getCategories());
-
-    dispatch(END);
-    await sagaTask.toPromise();
-    return { props: {} };
-  }
-);
+  storeSelector.getState().setCategories(categories.data as any);
+  return { props: {} };
+}

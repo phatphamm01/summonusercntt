@@ -1,26 +1,46 @@
-import { Fragment } from "react";
-import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { END } from "redux-saga";
+import { Fragment } from 'react';
 
-import Product from "@containers/Product";
-import { wrapper } from "@redux/store";
+import { GetServerSideProps } from '../../types/nextjs/index';
 
-import MetaTitle from "@designs/MetaTitle";
-import { getFacets, getProductsByType } from "@redux/slices/product";
+import Product from '~/containers/Product';
+import MetaTitle from '~/designs/MetaTitle';
 
-import { getPathProductByType } from "@common/helper/product/getPathProductByType";
-import { getCategories } from "@redux/slices/common";
-import fetchCommon from "@services/common";
+import { useUpdateStore } from '~/hooks/useUpdateStore';
+import { storeSelector } from '~/store';
+
+import { NextPageProps } from '~/types/nextjs';
 
 interface IProductPage {
   name?: string;
 }
 
-const ProductPage: NextPage<IProductPage> = ({ name }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { slug } = params as { slug: Array<string> };
+
+  await storeSelector.getState().getCategoriesApi();
+  await storeSelector.getState().getProductsByTypeApi({ id: slug[0] });
+  await storeSelector.getState().getFacetsApi({ id: slug[0] });
+
+  return {
+    props: {
+      data: {
+        categories: storeSelector.getState().categories,
+        facets: storeSelector.getState().facets,
+        productsByType: storeSelector.getState().productsByType,
+      },
+    },
+  };
+};
+
+const ProductPage: NextPageProps<IProductPage & typeof getServerSideProps> = ({
+  data,
+  name,
+}) => {
+  useUpdateStore(data);
   return (
     <Fragment>
       <MetaTitle
-        title={name ? name.charAt(0).toUpperCase() + name.slice(1) : "Product"}
+        title={name ? name.charAt(0).toUpperCase() + name.slice(1) : 'Product'}
       />
       <Product />
     </Fragment>
@@ -28,35 +48,3 @@ const ProductPage: NextPage<IProductPage> = ({ name }) => {
 };
 
 export default ProductPage;
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await fetchCommon.getCategories();
-  const paths = getPathProductByType(data as any);
-
-  return {
-    paths: paths,
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
-  (store) =>
-    async ({ params }) => {
-      const { dispatch, sagaTask } = store;
-      const { slug } = params as { slug: Array<string> };
-
-      await dispatch(getCategories());
-      await dispatch(getProductsByType({ id: slug[0] }));
-      await dispatch(getFacets({ id: slug[0] }));
-
-      dispatch(END);
-      await sagaTask.toPromise();
-
-      return {
-        props: {
-          name: slug[1],
-        },
-        revalidate: 10,
-      };
-    }
-);

@@ -1,17 +1,16 @@
-import Auth from "@components/Auth";
-import Loading from "@components/Loading";
-import { useAppSelector } from "@hooks/redux";
-import useToggleAndCloseVer2 from "@hooks/useToggleAndCloseVer2";
-import React, { useRef } from "react";
+import React, { FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
-import { FC, Fragment, ReactChild, useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import Footer from './components/Footer';
+import Header from './components/Header';
+import NavDetailMobile from './components/NavDetailMobile';
+import Popup from './components/Popup';
 
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import NavDetailMobile from "./components/NavDetailMobile";
-import Popup from "./components/Popup";
+import Auth from '~/components/Auth';
+import Loading from '~/components/Loading';
+
+import useToggleAndCloseVer2 from '~/hooks/useToggleAndCloseVer2';
 
 const Wrapper = styled.div`
   ${tw`pt-[145.5px] lg:pt-[125.5px] pb-20`}

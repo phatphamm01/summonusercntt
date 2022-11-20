@@ -1,7 +1,9 @@
-import { IProduct } from "@redux/types/product";
+import { IProduct } from '~/store/product/types';
 
 export const getPathProductAll = (data: Array<IProduct>) => {
-  let result = data?.map((path) => ({
+  if (!Array.isArray(data)) return [];
+
+  let result = data.map((path) => ({
     params: {
       slug: [path._id, path.slug],
     },

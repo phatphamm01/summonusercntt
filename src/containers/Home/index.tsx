@@ -1,10 +1,13 @@
-import Banner from "@components/Banner";
-import Layout from "@components/Layout";
-import IconSVG from "@designs/IconSVG";
-import Link from "@designs/Link";
-import { FC } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { FC, useEffect } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import Banner from '~/components/Banner';
+import Layout from '~/components/Layout';
+import IconSVG from '~/designs/IconSVG';
+import Link from '~/designs/Link';
+
+import { storeSelector } from '~/store/index';
 
 const Container = styled.div`
   ${tw`container mx-auto not-first:mt-32`}
@@ -21,6 +24,12 @@ const CardBox = styled.div`
 `;
 
 const Home: FC = () => {
+  const { status, time } = storeSelector((state) => state.loading);
+
+  useEffect(() => {
+    if (status === 'close') return;
+    storeSelector.getState().setLoading({ status: 'close' });
+  }, [status]);
   return (
     <Layout>
       <MainContainer className="wrapper" id="main" data-click="close-menu">
@@ -31,7 +40,7 @@ const Home: FC = () => {
         {/* <!-- Directlinks --> */}
         <Container>
           <div className="grid grid-cols-4 lg:grid-cols-2 gap-10">
-            <Link href={"/category/174/girl"}>
+            <Link href={'/category/174/girl'}>
               <CardBox className="col-3">
                 <picture className="cs-picture lazyload-block">
                   <source
@@ -67,7 +76,7 @@ const Home: FC = () => {
                 </h2>
               </CardBox>
             </Link>
-            <Link href={"/category/343/boy"}>
+            <Link href={'/category/343/boy'}>
               <CardBox className="col-3">
                 <picture className="cs-picture lazyload-block">
                   <source
@@ -103,7 +112,7 @@ const Home: FC = () => {
                 </h2>
               </CardBox>
             </Link>
-            <Link href={"/category/1/baby"}>
+            <Link href={'/category/1/baby'}>
               <CardBox className="col-3">
                 <picture className="cs-picture lazyload-block">
                   <source
@@ -139,7 +148,7 @@ const Home: FC = () => {
                 </h2>
               </CardBox>
             </Link>
-            <Link href={"/category/8836/designers"}>
+            <Link href={'/category/8836/designers'}>
               <CardBox className="col-3">
                 <picture className="cs-picture lazyload-block">
                   <source
@@ -425,7 +434,7 @@ const Home: FC = () => {
         <Container>
           <div className="mb-10">
             <IconSVG
-              style={{ width: "220px", height: "50px", color: "#008132" }}
+              style={{ width: '220px', height: '50px', color: '#008132' }}
               className="mx-auto"
               iconHref="/icon.svg#svgs-sticker--stars"
             />

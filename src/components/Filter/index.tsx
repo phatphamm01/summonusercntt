@@ -1,9 +1,11 @@
-import { FC, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
-import Check from "./components/Check";
-import { useRouter } from "next/router";
-import { IFacet } from "@redux/types/product";
+import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
+
+import Check from './components/Check';
+
+import { IFacet } from '~/store/product/types';
 
 const FilterContainer = styled.div`
   ${tw``}
@@ -68,7 +70,7 @@ interface IFilter {
   data: IFacet;
 }
 
-const listCloumn2 = ["Clothing sizes", "Colors"];
+const listCloumn2 = ['Clothing sizes', 'Colors'];
 
 const Filter: FC<IFilter> = ({ data }) => {
   const router = useRouter();
@@ -78,8 +80,8 @@ const Filter: FC<IFilter> = ({ data }) => {
   useEffect(() => {
     let check = document?.querySelectorAll(
       `[data-checkedfilter=true][data-namefilter="${data.name
-        ?.split(" ")
-        ?.join("")}"]`
+        ?.split(' ')
+        ?.join('')}"]`
     );
 
     if (check.length > 0) {
@@ -103,8 +105,8 @@ const Filter: FC<IFilter> = ({ data }) => {
     let checked = Array.from(
       document.querySelectorAll(
         `[data-checkedfilter=true][data-namefilter=${data.name
-          ?.split(" ")
-          ?.join("")}]`
+          ?.split(' ')
+          ?.join('')}]`
       )
     );
 
@@ -115,8 +117,8 @@ const Filter: FC<IFilter> = ({ data }) => {
     );
 
     let url = new URL(location.origin + router.asPath);
-    let p = url.searchParams.getAll("p");
-    let sort = url.searchParams.getAll("sort");
+    let p = url.searchParams.getAll('p');
+    let sort = url.searchParams.getAll('sort');
 
     let newParam = p.filter((value) => arrId.indexOf(value) === -1);
     // setIsActiveFilter(false);
@@ -150,7 +152,7 @@ const Filter: FC<IFilter> = ({ data }) => {
         {data.values?.map((value) => (
           <FilterItem key={value.id}>
             <Check
-              nameFilter={data.name?.split(" ")?.join("")}
+              nameFilter={data.name?.split(' ')?.join('')}
               id={value.id}
               name={value.name}
             />

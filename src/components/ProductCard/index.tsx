@@ -1,13 +1,14 @@
-import IconSVG from "@designs/IconSVG";
-import { FC, useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import Skeleton from "react-loading-skeleton";
-import { useAppDispatch } from "@hooks/redux";
-import { addWishlist } from "@redux/slices/user";
-import Link from "@designs/Link";
-import { IProduct } from "@redux/types/product";
+import { FC, useEffect, useState } from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import Skeleton from 'react-loading-skeleton';
+import styled, { css } from 'styled-components';
+import tw from 'twin.macro';
+
+import IconSVG from '~/designs/IconSVG';
+import Link from '~/designs/Link';
+
+import { storeSelector } from '~/store';
+import { IProduct } from '~/store/product/types';
 
 const ProductCardContainer = styled.div`
   ${tw`flex flex-col gap-2 relative pt-10`}
@@ -68,7 +69,6 @@ interface IProductCard {
 }
 
 const ProductCard: FC<IProductCard> = ({ data, isCheck = false }) => {
-  const dispatch = useAppDispatch();
   const [check, setCheck] = useState<boolean>(false);
   const [isLike, setIsLike] = useState<boolean>();
 
@@ -90,7 +90,7 @@ const ProductCard: FC<IProductCard> = ({ data, isCheck = false }) => {
     let payload = {
       product: data._id,
     };
-    dispatch(addWishlist(payload));
+    storeSelector.getState().addWishlistApi?.(payload);
   };
 
   return (

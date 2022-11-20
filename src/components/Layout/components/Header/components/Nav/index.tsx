@@ -1,12 +1,14 @@
-import { ComponentProps, FC, memo } from "react";
+import { FC, memo } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
-import tw from "twin.macro";
-import styled, { css } from "styled-components";
+import NavDetail from '../NavDetail';
 
-import { IMediaQuery } from "@interfaces/UI/IMediaQuery";
-import NavDetail from "../NavDetail";
-import Link from "@designs/Link";
-import { ICategory } from "@redux/types/common";
+import Link from '~/designs/Link';
+
+import { ICategory } from '~/store/common/types';
+
+import { IMediaQuery } from '~/types/UI/IMediaQuery';
 
 const NavContainer = styled.div`
   ${tw`justify-center`}

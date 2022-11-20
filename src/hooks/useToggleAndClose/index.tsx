@@ -1,4 +1,4 @@
-import { Ref, useCallback, useEffect, useState } from "react";
+import { Ref, useCallback, useEffect, useState } from 'react';
 
 const useToggleAndClose = (
   name: string,
@@ -16,9 +16,9 @@ const useToggleAndClose = (
 
   useEffect(() => {
     if (state) {
-      document.addEventListener("mousedown", handleClose, false);
+      document.addEventListener('mousedown', handleClose, false);
     } else {
-      document.removeEventListener("mousedown", handleClose, false);
+      document.removeEventListener('mousedown', handleClose, false);
     }
   }, [state]);
 

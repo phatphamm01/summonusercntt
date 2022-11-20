@@ -1,7 +1,8 @@
-import { FC } from "react";
-import tw from "twin.macro";
-import Link from "@designs/Link";
-import styled from "styled-components";
+import { FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import Link from '~/designs/Link';
 
 interface ILogo {
   width: string | number;

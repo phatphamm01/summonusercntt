@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useState } from "react";
+import { RefObject, useCallback, useEffect, useState } from 'react';
 
 const useToggleAndCloseVer2 = (
   ref: RefObject<HTMLElement>,
@@ -22,9 +22,9 @@ const useToggleAndCloseVer2 = (
     let { current } = ref;
 
     if (current) {
-      document.addEventListener("mousedown", handleClose, false);
+      document.addEventListener('mousedown', handleClose, false);
     } else {
-      document.removeEventListener("mousedown", handleClose, false);
+      document.removeEventListener('mousedown', handleClose, false);
     }
   }, [state]);
 

@@ -1,7 +1,8 @@
-import { FC } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import Layout from "@components/Layout";
+import { FC } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import Layout from '~/components/Layout';
 
 const ErrorContainer = styled.div`
   ${tw`relative`}

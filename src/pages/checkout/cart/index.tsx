@@ -1,13 +1,25 @@
-import type { NextPage } from "next";
-import { Fragment } from "react";
-import { END } from "redux-saga";
+import { Fragment } from 'react';
 
-import Cart from "@containers/Cart";
-import MetaTitle from "@designs/MetaTitle";
-import { wrapper } from "@redux/store";
-import { getCategories } from "@redux/slices/common";
+import Cart from '~/containers/Cart';
+import MetaTitle from '~/designs/MetaTitle';
 
-const CartPage: NextPage = (props) => {
+import { useUpdateStore } from '~/hooks/useUpdateStore';
+import { storeSelector } from '~/store';
+
+import { GetStaticProps, NextPageProps } from '~/types/nextjs';
+
+export const getStaticProps: GetStaticProps = async () => {
+  await storeSelector.getState().getCategoriesApi();
+
+  return {
+    props: {
+      data: { categories: storeSelector.getState().categories },
+    },
+  };
+};
+
+const CartPage: NextPageProps<typeof getStaticProps> = ({ data }) => {
+  useUpdateStore(data);
   return (
     <Fragment>
       <MetaTitle title="Cart" />
@@ -17,15 +29,3 @@ const CartPage: NextPage = (props) => {
 };
 
 export default CartPage;
-
-export const getStaticProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const { dispatch, sagaTask } = store;
-
-    dispatch(getCategories());
-
-    dispatch(END);
-    await sagaTask.toPromise();
-    return { props: {} };
-  }
-);

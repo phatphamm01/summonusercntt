@@ -1,8 +1,9 @@
-import useToggleAndClose from "@hooks/useToggleAndClose";
-import { IVariant } from "@redux/types/product";
-import { FC, useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import tw from "twin.macro";
+import { FC, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import useToggleAndClose from '~/hooks/useToggleAndClose';
+import { IVariant } from '~/store/product/types';
 
 const SelectContainer = styled.div`
   ${tw`w-[245px]`}
@@ -80,7 +81,7 @@ interface ISelect {
 }
 
 const Select: FC<ISelect> = ({ list }) => {
-  const [isActive, setIsActive] = useToggleAndClose("select-pay");
+  const [isActive, setIsActive] = useToggleAndClose('select-pay');
   const [state, setstate] = useState();
   useEffect(() => {}, []);
 
@@ -98,7 +99,7 @@ const Select: FC<ISelect> = ({ list }) => {
             <SelectList>
               {list &&
                 list?.map((value) => (
-                  <SelectItem data-element="select-pay">
+                  <SelectItem key={value._id} data-element="select-pay">
                     <ItemSize>{value.size}</ItemSize>
                     <ItemPrice>${value.price}</ItemPrice>
                   </SelectItem>

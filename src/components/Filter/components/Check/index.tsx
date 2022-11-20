@@ -1,8 +1,9 @@
-import { FC, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import { useRouter } from "next/router";
-import { handlePathQuery } from "@common/helper/path/handlePathQuery";
+import { useRouter } from 'next/router';
+import { FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import { handlePathQuery } from '~/common/helper/path/handlePathQuery';
 
 const CheckContainer = styled.div`
   ${tw`flex items-center gap-3`}
@@ -18,7 +19,7 @@ const InputCheck = styled.input`
     height: 100%;
     width: 100%;
 
-    background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIGZpbGw9IiNmZmYiPjxwYXRoIGQ9Ik0xMDIxIDE0MWwzIDE3LTMgMTctMTEgMTUtNzEwIDcxMi0xMCA3LTcgMi0xMiAxLTEyLTEtMTItNi04LTZMMTQgNjczIDMgNjU4bC0zLTE3IDMtMTkgMTEtMTQgMTUtMTAgMTctMyAxNyAzIDE2IDEwIDE5MiAxOTMgNjc2LTY3NiAxNC0xMCAxOS0zIDE3IDMgMTMgMTAgMTEgMTZ6Ii8+PC9zdmc+")
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIGZpbGw9IiNmZmYiPjxwYXRoIGQ9Ik0xMDIxIDE0MWwzIDE3LTMgMTctMTEgMTUtNzEwIDcxMi0xMCA3LTcgMi0xMiAxLTEyLTEtMTItNi04LTZMMTQgNjczIDMgNjU4bC0zLTE3IDMtMTkgMTEtMTQgMTUtMTAgMTctMyAxNyAzIDE2IDEwIDE5MiAxOTMgNjc2LTY3NiAxNC0xMCAxOS0zIDE3IDMgMTMgMTAgMTEgMTZ6Ii8+PC9zdmc+')
       no-repeat 50%;
     background-size: 13px;
 
@@ -53,8 +54,10 @@ const Check: FC<ICheck> = ({ name, id, nameFilter }) => {
   const {
     query: { p },
   } = router;
-  const [href, setHref] =
-    useState<{ path: string; query?: { p: string[]; sort: string[] } }>();
+  const [href, setHref] = useState<{
+    path: string;
+    query?: { p: string[]; sort: string[] };
+  }>();
   var ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -76,7 +79,7 @@ const Check: FC<ICheck> = ({ name, id, nameFilter }) => {
   const handleChecked = (id: string) => {
     let url = new URL(location.origin + router.asPath);
 
-    let check = url?.searchParams.getAll("p").some((value) => value === id);
+    let check = url?.searchParams.getAll('p').some((value) => value === id);
 
     if (ref?.current) ref.current.checked = check;
   };

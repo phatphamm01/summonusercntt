@@ -1,17 +1,17 @@
-import StorageToken from "@common/utils/storage";
-import { AuthContext } from "@components/Auth";
-import Button from "@designs/Button";
-import Input from "@designs/Input";
-import { useAppDispatch, useAppSelector } from "@hooks/redux";
-import { getCart, getUserSuccess, getWishlist } from "@redux/slices/user";
-import fetchAuth from "@services/auth";
-import { Formik } from "formik";
-import { FC, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import styled from "styled-components";
-import tw from "twin.macro";
-import * as Yup from "yup";
-import { EmailContext } from "..";
+import { Formik } from 'formik';
+import { FC, useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import * as Yup from 'yup';
+
+import { EmailContext } from '..';
+
+import { AuthContext } from '~/components/Auth';
+import Button from '~/designs/Button';
+import Input from '~/designs/Input';
+
+import fetchAuth from '~/services/auth';
 
 const LoginContainer = styled.div`
   ${tw``}
@@ -42,13 +42,12 @@ interface IFormValues {
 }
 
 const Veriry: FC<ILogin> = ({ handleClickVerify }) => {
-  const dispatch = useAppDispatch();
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
 
   const { setTitle, setStateForm } = useContext(AuthContext);
   const { getEmail } = useContext(EmailContext);
   useEffect(() => {
-    setTitle?.("Forgot Password");
+    setTitle?.('Forgot Password');
   }, []);
 
   const handleShowPassword = () => {
@@ -58,9 +57,9 @@ const Veriry: FC<ILogin> = ({ handleClickVerify }) => {
   return (
     <Formik
       initialValues={{
-        code: "",
-        password: "",
-        passwordConfirm: "",
+        code: '',
+        password: '',
+        passwordConfirm: '',
       }}
       validationSchema={Yup.object().shape({})}
       onSubmit={async (payload: IFormValues) => {
@@ -70,12 +69,12 @@ const Veriry: FC<ILogin> = ({ handleClickVerify }) => {
             email: getEmail(),
           });
 
-          if (typeof result === "string") {
+          if (typeof result === 'string') {
             toast.error(result);
             return;
           }
 
-          setStateForm?.("LOGIN");
+          setStateForm?.('LOGIN');
         } catch (error: any) {
           toast.error(error);
         }
@@ -113,7 +112,7 @@ const Veriry: FC<ILogin> = ({ handleClickVerify }) => {
               <Input
                 name="password"
                 title="Password"
-                type={isShowPassword ? "text" : "password"}
+                type={isShowPassword ? 'text' : 'password'}
                 value={values.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -129,7 +128,7 @@ const Veriry: FC<ILogin> = ({ handleClickVerify }) => {
               <Input
                 name="passwordConfirm"
                 title="Confirm Password"
-                type={isShowPassword ? "text" : "password"}
+                type={isShowPassword ? 'text' : 'password'}
                 value={values.passwordConfirm}
                 onChange={handleChange}
                 onBlur={handleBlur}

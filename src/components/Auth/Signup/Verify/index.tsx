@@ -1,14 +1,17 @@
-import { AuthContext } from "@components/Auth";
-import Button from "@designs/Button";
-import Input from "@designs/Input";
-import fetchAuth from "@services/auth";
-import { Formik } from "formik";
-import { FC, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import styled from "styled-components";
-import tw from "twin.macro";
-import * as Yup from "yup";
-import { EmailContext } from "..";
+import { Formik } from 'formik';
+import { FC, useContext, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import * as Yup from 'yup';
+
+import { EmailContext } from '..';
+
+import { AuthContext } from '~/components/Auth';
+import Button from '~/designs/Button';
+import Input from '~/designs/Input';
+
+import fetchAuth from '~/services/auth';
 
 const LoginContainer = styled.div`
   ${tw``}
@@ -36,18 +39,18 @@ const Verify: FC<IVerify> = ({ handleClickVerify }) => {
   const { setTitle, setStateForm } = useContext(AuthContext);
 
   useEffect(() => {
-    setTitle?.("Verify Account");
+    setTitle?.('Verify Account');
   }, []);
 
   return (
     <Formik
       initialValues={{
-        code: "",
+        code: '',
       }}
       validationSchema={Yup.object().shape({
         code: Yup.string()
-          .matches(phoneRegExp, "Code is not valid")
-          .required("Please enter your code"),
+          .matches(phoneRegExp, 'Code is not valid')
+          .required('Please enter your code'),
       })}
       onSubmit={async (dataForm: IFormValues) => {
         let payload = {
@@ -57,13 +60,13 @@ const Verify: FC<IVerify> = ({ handleClickVerify }) => {
 
         let result = await fetchAuth.verify(payload);
 
-        if (typeof result === "string") {
+        if (typeof result === 'string') {
           toast.error(result);
           return;
         }
-        toast.success("You have successfully registered");
+        toast.success('You have successfully registered');
 
-        setStateForm?.("LOGIN");
+        setStateForm?.('LOGIN');
       }}
     >
       {(props) => {

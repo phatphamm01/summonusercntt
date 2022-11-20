@@ -1,8 +1,9 @@
-import { FC } from "react";
-import tw from "twin.macro";
-import styled, { CSSProperties } from "styled-components";
-import IconSVG from "@designs/IconSVG";
-import Link from "@designs/Link";
+import { FC } from 'react';
+import styled, { CSSProperties } from 'styled-components';
+import tw from 'twin.macro';
+
+import IconSVG from '~/designs/IconSVG';
+import Link from '~/designs/Link';
 
 const IconLeftContainerLink = styled.div`
   ${tw``}
@@ -36,7 +37,7 @@ const IconLeft: FC<IIconLeft> = ({
   className,
 }) => {
   return !onClick ? (
-    <Link href={href || "/notfound"}>
+    <Link href={href || '/notfound'}>
       <IconLeftContainerLink>
         <IconLink className={className}>
           <IconSVG iconHref={icon} />

@@ -1,13 +1,29 @@
-import type { NextPage } from "next";
-import { Fragment } from "react";
-import { END } from "redux-saga";
+import { Fragment } from 'react';
 
-import Home from "@containers/Home";
-import MetaTitle from "@designs/MetaTitle";
-import { wrapper } from "@redux/store";
-import { getCategories } from "@redux/slices/common";
+import Home from '~/containers/Home';
+import MetaTitle from '~/designs/MetaTitle';
 
-const HomePage: NextPage = (props) => {
+import { useUpdateStore } from '~/hooks/useUpdateStore';
+import { storeSelector } from '~/store';
+
+import { GetServerSideProps, NextPageProps } from '~/types/nextjs';
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  await storeSelector.getState().getCategoriesApi();
+  return {
+    props: {
+      data: {
+        categories: storeSelector.getState().categories,
+      },
+    },
+  };
+};
+
+const HomePage: NextPageProps<typeof getServerSideProps> = ({
+  children,
+  data,
+}) => {
+  useUpdateStore(data);
   return (
     <Fragment>
       <MetaTitle title="Fashion" />
@@ -17,15 +33,3 @@ const HomePage: NextPage = (props) => {
 };
 
 export default HomePage;
-
-export const getStaticProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const { dispatch, sagaTask } = store;
-
-    dispatch(getCategories());
-
-    dispatch(END);
-    await sagaTask.toPromise();
-    return { props: {} };
-  }
-);

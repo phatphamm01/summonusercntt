@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import Skeleton from "react-loading-skeleton";
+import { useEffect, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
+
 type Props = {
   children: any;
   waitBeforeShow?: number;

@@ -1,16 +1,19 @@
-import { FC, useState } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { toast } from "react-toastify";
+import { Formik } from 'formik';
+import { FC, useState } from 'react';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import * as Yup from 'yup';
 
-import Button from "@designs/Button";
-import Input from "./components/Input";
-import fetchAuth from "@services/auth";
-import StorageToken from "@common/utils/storage";
-import { getCart, getUserSuccess, getWishlist } from "@redux/slices/user";
-import { useAppDispatch } from "@hooks/redux";
+import Input from './components/Input';
+
+import StorageToken from '~/common/utils/storage';
+
+import Button from '~/designs/Button';
+
+import { storeSelector } from '~/store/index';
+
+import fetchAuth from '~/services/auth';
 
 const PasswordFormContainer = styled.div`
   ${tw``}
@@ -39,7 +42,6 @@ interface IFormValues {
 }
 
 const PasswordForm: FC<IPasswordForm> = () => {
-  const dispatch = useAppDispatch();
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
 
   const handleShowPassword = () => {
@@ -49,27 +51,27 @@ const PasswordForm: FC<IPasswordForm> = () => {
   return (
     <Formik
       initialValues={{
-        passwordCurrent: "",
-        password: "",
-        passwordConfirm: "",
+        passwordCurrent: '',
+        password: '',
+        passwordConfirm: '',
       }}
       validationSchema={Yup.object().shape({})}
       onSubmit={async (payload: IFormValues) => {
         try {
           let result = await fetchAuth.changePassword(payload);
 
-          if (typeof result === "string") {
+          if (typeof result === 'string') {
             toast.error(result);
             return;
           }
 
           StorageToken.setUser(result.token);
 
-          dispatch(getUserSuccess({ payload: result.data }));
-          dispatch(getWishlist());
-          dispatch(getCart());
+          storeSelector.getState().setUser(result.data);
+          storeSelector.getState().getWishlistApi();
+          storeSelector.getState().getCartApi();
 
-          toast.success("Change password success");
+          toast.success('Change password success');
         } catch (error: any) {
           toast.error(error);
         }
@@ -93,7 +95,7 @@ const PasswordForm: FC<IPasswordForm> = () => {
                   <Input
                     name="passwordCurrent"
                     title="Current Password"
-                    type={isShowPassword ? "text" : "password"}
+                    type={isShowPassword ? 'text' : 'password'}
                     value={values.passwordCurrent}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -110,7 +112,7 @@ const PasswordForm: FC<IPasswordForm> = () => {
                 <Input
                   name="password"
                   title="New Password"
-                  type={isShowPassword ? "text" : "password"}
+                  type={isShowPassword ? 'text' : 'password'}
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -126,7 +128,7 @@ const PasswordForm: FC<IPasswordForm> = () => {
                 <Input
                   name="passwordConfirm"
                   title="Confirm Password"
-                  type={isShowPassword ? "text" : "password"}
+                  type={isShowPassword ? 'text' : 'password'}
                   value={values.passwordConfirm}
                   onChange={handleChange}
                   onBlur={handleBlur}

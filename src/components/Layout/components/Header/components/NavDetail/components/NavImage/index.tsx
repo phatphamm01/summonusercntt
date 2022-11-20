@@ -1,6 +1,6 @@
-import Image from "next/image";
-import tw from "twin.macro";
-import styled from "styled-components";
+import Image from 'next/image';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
 const NavImageContainer = styled.div`
   ${tw`lg:hidden`}
@@ -19,7 +19,7 @@ const NavImage = () => {
       />
       <span
         className="menu-banner-text"
-        style={{ color: "#000000", fontSize: "1.6em" }}
+        style={{ color: '#000000', fontSize: '1.6em' }}
       >
         Childrensalon Essentials
       </span>

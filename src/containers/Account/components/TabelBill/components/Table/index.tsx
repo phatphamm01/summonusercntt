@@ -1,9 +1,11 @@
-import { FC, Fragment, useContext } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import { IBill, IBillList } from "@redux/types/user";
-import moment from "moment";
-import { PopupContext } from "@components/Layout";
+import moment from 'moment';
+import { FC, useContext } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+import { PopupContext } from '~/components/Layout';
+
+import { IBill, IBillList } from '~/store/user/types';
 
 const TableContainer = styled.table`
   ${tw`w-full bg-white text-center`}
@@ -69,8 +71,8 @@ const Table: FC<IItem> = ({ data }) => {
         <HedaerItem>Action</HedaerItem>
       </Header>
       {data?.map((value) => {
-        let date = moment(Date.parse(value.createAt + "")).format(
-          "MMMM Do YYYY, h:mm:ss a"
+        let date = moment(Date.parse(value.createAt + '')).format(
+          'MMMM Do YYYY, h:mm:ss a'
         );
 
         return (
